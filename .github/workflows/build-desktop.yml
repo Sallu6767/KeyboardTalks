@@ -1,0 +1,88 @@
+name: "Build Desktop App"
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-tauri:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: "windows-latest"
+            target: "x86_64-pc-windows-msvc"
+          - platform: "ubuntu-22.04"
+            target: "x86_64-unknown-linux-gnu"
+
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "./src-tauri -> target"
+
+      - name: Install system dependencies (Ubuntu only)
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            pkg-config \
+            libglib2.0-dev \
+            libgtk-3-dev \
+            libwebkit2gtk-4.1-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            libssl-dev \
+            libasound2-dev \
+            libxdo-dev \
+            libx11-dev \
+            libxtst-dev \
+            patchelf \
+            libfuse2
+
+      - name: Install npm dependencies and build CSS
+        run: |
+          npm install
+          npx tailwindcss -i src/styles/main.css -o src/styles/output.css
+
+      - name: Build Tauri App & Publish Release
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || 'v0.1.0' }}
+          releaseName: "KeyboardTalks ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || 'v0.1.0' }}"
+          releaseBody: |
+            ## KeyboardTalks Release
+
+            ### 🚀 Features
+            - Instant mechanical keyboard sounds for every keystroke (~3-8ms latency)
+            - 5 built-in soundpacks: Mechanical, Typewriter, 8-Bit, Arcade, Click
+            - Pro Pass support: Custom sound import and per-key sound mapping
+            - System tray minimize and global background listeners
+
+            ### 📦 Downloads
+            - **Windows**: Download the `.exe` setup installer below.
+            - **Linux**: Download the `.AppImage` or `.deb` bundle below.
+          releaseDraft: false
+          prerelease: false
