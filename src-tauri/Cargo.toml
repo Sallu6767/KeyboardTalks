@@ -1,0 +1,66 @@
+[package]
+name = "keyboard-talks"
+version = "0.1.0"
+description = "KeyboardTalks - Mechanical keyboard sounds for every keystroke"
+authors = ["you"]
+edition = "2021"
+rust-version = "1.77.2"
+
+[lib]
+name = "keyboard_talks_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[[bin]]
+name = "keyboard-talks"
+path = "src/main.rs"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+
+# TAURI v2
+tauri = { version = "2", features = ["tray-icon"] }
+
+# TAURI PLUGINS
+tauri-plugin-autostart = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-shell = "2"
+
+# KEYBOARD LISTENER
+rdev = "0.5"
+
+# AUDIO PLAYBACK
+rodio = { version = "0.19", features = ["wav", "mp3"] }
+
+# SERIALIZATION
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# HTTP CLIENT (license validation)
+reqwest = { version = "0.12", features = ["json", "rustls-tls"], default-features = false }
+
+# ASYNC RUNTIME
+tokio = { version = "1", features = ["full"] }
+
+# CROSS-PLATFORM FILE PATHS
+dirs = "5"
+
+# UNIQUE DEVICE ID (for Lemon Squeezy activation)
+uuid = { version = "1", features = ["v4"] }
+
+# FAST THREAD-SAFE LOCKS
+parking_lot = "0.12"
+
+# GLOBAL SINGLETON (audio engine)
+once_cell = "1"
+
+[profile.dev]
+incremental = true
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+panic = "abort"
+strip = true

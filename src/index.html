@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>KeyboardTalks</title>
+        <link rel="stylesheet" href="styles/output.css" />
+    </head>
+
+    <body class="bg-gray-950 text-white select-none overflow-hidden">
+
+        <div id="app" class="w-full h-screen flex flex-col">
+
+            <header class="flex items-center justify-between px-4 py-3 border-b border-gray-800">
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">⌨️</span>
+                    <span class="text-sm font-bold tracking-wide text-gray-100">
+                        KeyboardTalks
+                    </span>
+                </div>
+                <nav class="flex gap-1">
+                    <button
+                        id="tab-dashboard"
+                        data-tab="dashboard"
+                        class="tab-btn active px-3 py-1.5 text-xs font-medium rounded-md
+                            bg-indigo-600 text-white transition-all duration-200"
+                    >
+                        🎵 Sounds
+                    </button>
+                    <button
+                        id="tab-mapper"
+                        data-tab="mapper"
+                        class="tab-btn px-3 py-1.5 text-xs font-medium rounded-md
+                            bg-gray-800 text-gray-400 hover:text-white
+                            transition-all duration-200"
+                    >
+                        🎹 Mapper
+                    </button>
+                    <button
+                        id="tab-settings"
+                        data-tab="settings"
+                        class="tab-btn px-3 py-1.5 text-xs font-medium rounded-md
+                            bg-gray-800 text-gray-400 hover:text-white
+                            transition-all duration-200"
+                    >
+                        ⚙️ Settings
+                    </button>
+                </nav>
+            </header>
+
+            <section id="screen-dashboard" class="screen flex-1 overflow-y-auto p-4 space-y-4">
+
+                <div>
+                    <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                        Sound Pack
+                    </h2>
+                    <div id="soundpack-list" class="space-y-2">
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                        Volume
+                    </h2>
+                    <div class="flex items-center gap-3 bg-gray-900 rounded-lg p-3">
+                        <button
+                            id="btn-mute"
+                            class="text-lg hover:scale-110 transition-transform"
+                            title="Toggle Mute"
+                        >
+                            🔊
+                        </button>
+                        <div id="volume-slider-container" class="flex-1"></div>
+                        <span id="volume-label" class="text-xs text-gray-400 w-8 text-right">
+                            80%
+                        </span>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                        Options
+                    </h2>
+
+                    <div class="flex items-center justify-between bg-gray-900 rounded-lg p-3">
+                        <div>
+                            <p class="text-sm font-medium text-gray-200">Run on Startup</p>
+                            <p class="text-xs text-gray-500">Start automatically when you log in</p>
+                        </div>
+                        <button
+                            id="btn-startup"
+                            class="toggle-btn w-11 h-6 rounded-full bg-gray-700 relative
+                                transition-colors duration-200"
+                        >
+                            <span class="toggle-knob block w-5 h-5 rounded-full bg-white
+                                        absolute top-0.5 left-0.5
+                                        transition-transform duration-200"></span>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center justify-between bg-gray-900 rounded-lg p-3">
+                        <div>
+                            <p class="text-sm font-medium text-gray-200">Minimize to Tray</p>
+                            <p class="text-xs text-gray-500">Hide to system tray when closed</p>
+                        </div>
+                        <button
+                            id="btn-tray"
+                            class="toggle-btn w-11 h-6 rounded-full bg-indigo-600 relative
+                                transition-colors duration-200"
+                        >
+                            <span class="toggle-knob block w-5 h-5 rounded-full bg-white
+                                        absolute top-0.5 left-0.5 translate-x-5
+                                        transition-transform duration-200"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="pro-banner"
+                    class="bg-gradient-to-r from-indigo-900/50 to-purple-900/50
+                            border border-indigo-700/30 rounded-lg p-4 space-y-3">
+
+                    <div>
+                        <p class="text-sm font-bold text-indigo-300">✨ Upgrade to Pro</p>
+                        <p class="text-xs text-gray-400 mt-0.5">
+                            Custom sounds &amp; per-key mapping
+                        </p>
+                    </div>
+
+                    <button
+                        id="btn-buy-pro-banner"
+                        class="w-full py-2 bg-indigo-600 hover:bg-indigo-500
+                            text-white text-sm font-bold rounded-lg
+                            transition-colors"
+                    >
+                        🛒 Buy Pro — $5.99
+                    </button>
+                    <p class="text-xs text-gray-600 text-center">
+                        Opens in browser · Key sent to your email
+                    </p>
+
+                    <div class="border-t border-indigo-800/50"></div>
+
+                    <button
+                        id="btn-show-activate"
+                        class="w-full text-xs text-indigo-400 hover:text-indigo-300
+                            transition-colors text-center"
+                    >
+                        Already have a key? Activate here ▸
+                    </button>
+
+                    <div id="banner-activate-panel" class="hidden space-y-2">
+                        <div class="flex gap-2">
+                            <input
+                                id="banner-license-input"
+                                type="text"
+                                placeholder="Paste license key from email"
+                                class="flex-1 bg-gray-800 border border-gray-700
+                                    rounded-md px-3 py-2 text-xs text-white
+                                    placeholder:text-gray-600
+                                    focus:border-indigo-500 focus:outline-none
+                                    transition-colors"
+                            />
+                            <button
+                                id="banner-btn-activate"
+                                class="px-3 py-2 bg-indigo-600 text-white text-xs
+                                    font-medium rounded-md hover:bg-indigo-500
+                                    transition-colors whitespace-nowrap"
+                            >
+                                Activate
+                            </button>
+                        </div>
+                        <p id="banner-license-message" class="text-xs hidden"></p>
+                    </div>
+
+                </div>
+            </section>
+
+            <section id="screen-mapper" class="screen flex-1 overflow-y-auto p-4 space-y-4 hidden relative">
+
+                <div id="mapper-lock"
+                    class="absolute inset-0 z-10 bg-gray-950/80
+                            backdrop-blur-sm flex flex-col items-center justify-center">
+                    <span class="text-4xl mb-3">🔒</span>
+                    <p class="text-lg font-bold text-white">Pro Feature</p>
+                    <p class="text-sm text-gray-400 mt-1 text-center px-8">
+                        Import custom sounds and assign them to individual keys
+                    </p>
+
+                    <button
+                        id="btn-buy-pro-mapper"
+                        class="mt-4 w-56 py-2.5 bg-indigo-600 text-white text-sm
+                            font-bold rounded-lg hover:bg-indigo-500 transition-colors"
+                    >
+                        🛒 Buy Pro — $5.99
+                    </button>
+                    <p class="text-xs text-gray-600 mt-1">
+                        Opens in browser · Key sent to your email
+                    </p>
+
+                    <p class="text-xs text-gray-500 mt-3">
+                        Already purchased?
+                        <button
+                            id="btn-mapper-go-settings"
+                            class="text-indigo-400 hover:text-indigo-300 underline"
+                        >
+                            Activate in Settings
+                        </button>
+                    </p>
+                </div>
+
+                <div>
+                    <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                        Import Sounds
+                    </h2>
+                    <div id="dropzone"
+                        class="border-2 border-dashed border-gray-700
+                                rounded-lg p-6 text-center cursor-pointer
+                                hover:border-indigo-500 hover:bg-gray-900/50
+                                transition-all duration-200">
+                        <span class="text-2xl">📁</span>
+                        <p class="text-sm text-gray-400 mt-2">
+                            Drop .wav or .mp3 files here
+                        </p>
+                        <p class="text-xs text-gray-600 mt-1">
+                            Max 2 seconds, under 2MB
+                        </p>
+                        <input
+                            id="file-input"
+                            type="file"
+                            accept=".wav,.mp3"
+                            multiple
+                            class="hidden"
+                        />
+                    </div>
+
+                    <div class="mt-3 p-3 bg-gray-900/40 border border-gray-800/80 rounded-xl text-xs text-gray-400 leading-relaxed">
+                        <span class="text-indigo-400">💡 Tip:</span> Need sound ideas? Download free meme, gaming &amp; viral sound clips from
+                        <a id="link-myinstants" href="#" class="text-indigo-400 hover:text-indigo-300 underline font-semibold transition-colors">MyInstants</a>.
+                        <span class="block mt-1 text-[10px] text-gray-600">
+                            * We are in no way affiliated with myinstants.com
+                        </span>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                        Your Sounds
+                    </h2>
+                    <div id="custom-sounds-list" class="space-y-1">
+                        <p class="text-xs text-gray-600 italic">No custom sounds imported yet</p>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                        Key Mapping
+                    </h2>
+                    <div id="keyboard-visual" class="bg-gray-900 rounded-lg p-3"></div>
+                </div>
+
+                <div>
+                    <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                        Active Mappings
+                    </h2>
+                    <div id="mappings-list" class="space-y-1">
+                        <p class="text-xs text-gray-600 italic">No keys mapped yet</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="screen-settings" class="screen flex-1 overflow-y-auto p-4 space-y-4 hidden">
+
+                <div>
+                    <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                        Pro License
+                    </h2>
+
+                    <div class="bg-gray-900 rounded-lg p-4 space-y-3">
+
+                        <div id="pro-status" class="flex items-center gap-2">
+                            <span id="pro-status-dot"
+                                class="w-2 h-2 rounded-full bg-gray-600"></span>
+                            <span id="pro-status-text"
+                                class="text-sm text-gray-400">Free Plan</span>
+                        </div>
+
+                        <div class="border-t border-gray-800"></div>
+
+                        <div>
+                            <p class="text-xs font-semibold text-gray-300 mb-1">
+                                Already purchased Pro?
+                            </p>
+                            <p class="text-xs text-gray-500 mb-2">
+                                Paste the license key from your email below
+                                to activate on this device.
+                            </p>
+                            <div class="flex gap-2">
+                                <input
+                                    id="license-input"
+                                    type="text"
+                                    placeholder="Paste license key from email"
+                                    class="flex-1 bg-gray-800 border border-gray-700
+                                        rounded-md px-3 py-2 text-sm text-white
+                                        placeholder:text-gray-600
+                                        focus:border-indigo-500 focus:outline-none
+                                        transition-colors"
+                                />
+                                <button
+                                    id="btn-validate"
+                                    class="px-4 py-2 bg-indigo-600 text-white text-sm
+                                        font-medium rounded-md hover:bg-indigo-500
+                                        transition-colors whitespace-nowrap"
+                                >
+                                    Activate
+                                </button>
+                            </div>
+                            <p id="license-message" class="text-xs mt-2 hidden"></p>
+                        </div>
+
+                        <div class="border-t border-gray-800"></div>
+
+                        <div>
+                            <p class="text-xs font-semibold text-gray-300 mb-1">
+                                Don't have Pro yet?
+                            </p>
+                            <a id="btn-buy-pro"
+                            href="#"
+                            class="flex items-center justify-center gap-2
+                                    w-full py-2 bg-indigo-600 hover:bg-indigo-500
+                                    text-white text-sm font-bold rounded-lg
+                                    transition-colors"
+                            >
+                                🛒 Buy Pro Pass — $5.99
+                            </a>
+                            <p class="text-xs text-gray-600 text-center mt-1">
+                                Opens in browser · Works on phone too
+                            </p>
+                        </div>
+
+                        <div class="border-t border-gray-800"></div>
+
+                        <div id="how-it-works-section">
+                            <p class="text-xs font-semibold text-gray-400 mb-2">
+                                How activation works
+                            </p>
+                            <div class="space-y-1">
+                                <div class="flex items-start gap-2">
+                                    <span class="text-xs text-indigo-400 font-bold
+                                                w-4 shrink-0">1</span>
+                                    <p class="text-xs text-gray-500">
+                                        Buy Pro Pass in your browser
+                                        (works on phone or PC)
+                                    </p>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-xs text-indigo-400 font-bold
+                                                w-4 shrink-0">2</span>
+                                    <p class="text-xs text-gray-500">
+                                        Check your email for the license key
+                                    </p>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-xs text-indigo-400 font-bold
+                                                w-4 shrink-0">3</span>
+                                    <p class="text-xs text-gray-500">
+                                        Paste the key above and click Activate
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                        About
+                    </h2>
+                    <div class="bg-gray-900 rounded-lg p-4 space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-400">Version</span>
+                            <span class="text-sm text-gray-200">0.1.0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-400">Engine</span>
+                            <span class="text-sm text-gray-200">Tauri v2 + Rust</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-400">Audio Latency</span>
+                            <span class="text-sm text-gray-200">~3-8ms</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                        Links
+                    </h2>
+                    <div class="bg-gray-900 rounded-lg divide-y divide-gray-800">
+                        <a id="link-website" href="#"
+                        class="flex items-center justify-between p-3
+                                hover:bg-gray-800 transition-colors rounded-t-lg">
+                            <span class="text-sm text-gray-300">🌐 Website</span>
+                            <span class="text-xs text-gray-600">→</span>
+                        </a>
+                        <a id="link-github" href="#"
+                        class="flex items-center justify-between p-3
+                                hover:bg-gray-800 transition-colors">
+                            <span class="text-sm text-gray-300">💻 GitHub</span>
+                            <span class="text-xs text-gray-600">→</span>
+                        </a>
+                        <a id="link-privacy" href="#"
+                        class="flex items-center justify-between p-3
+                                hover:bg-gray-800 transition-colors rounded-b-lg">
+                            <span class="text-sm text-gray-300">🔒 Privacy Policy</span>
+                            <span class="text-xs text-gray-600">→</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <div id="toast-container"
+                class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none">
+            </div>
+
+        </div>
+
+        <script src="js/utils/tauri-bridge.js"></script>
+        <script src="js/utils/state.js"></script>
+        <script src="js/components/toast.js"></script>
+        <script src="js/components/volume-slider.js"></script>
+        <script src="js/components/dropzone.js"></script>
+        <script src="js/components/keyboard-visual.js"></script>
+        <script src="js/views/dashboard.js"></script>
+        <script src="js/views/mapper.js"></script>
+        <script src="js/views/settings.js"></script>
+        <script src="js/app.js"></script>
+
+    </body>
+</html>
