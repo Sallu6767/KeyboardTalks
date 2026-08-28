@@ -1,7 +1,7 @@
 {
   "productName": "KeyboardTalks",
   "version": "0.1.0",
-  "identifier": "com.keyboardtalks.app",
+  "identifier": "com.keyboardtalks",
   "build": {
     "frontendDist": "../src",
     "devUrl": "http://127.0.0.1:1420"
