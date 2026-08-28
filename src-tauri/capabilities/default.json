@@ -16,22 +16,6 @@
         { "url": "http://**" },
         { "url": "mailto:**" }
       ]
-    },
-    "allow-get-config",
-    "allow-set-soundpack",
-    "allow-set-volume",
-    "allow-toggle-mute",
-    "allow-toggle-startup",
-    "allow-set-minimize-to-tray",
-    "allow-get-soundpacks",
-    "allow-play-test-sound",
-    "allow-validate-license",
-    "allow-check-pro-status",
-    "allow-import-custom-sound",
-    "allow-set-key-mapping",
-    "allow-remove-mapping",
-    "allow-get-custom-mappings",
-    "allow-get-custom-sound-files",
-    "allow-open-file-dialog"
+    }
   ]
 }
