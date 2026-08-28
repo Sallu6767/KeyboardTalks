@@ -24,7 +24,15 @@ pub fn run() {
             keyboard::init();
 
             let window = app.get_webview_window("main").unwrap();
-            window.webview().open_devtools();
+
+            // Force open DevTools to debug JavaScript errors
+            // (Remove this line after debugging)
+            window
+                .with_webview(|webview| {
+                    webview.open_devtools();
+                })
+                .unwrap();
+
             let window_clone = window.clone();
 
             window.on_window_event(move |event| {
@@ -33,7 +41,6 @@ pub fn run() {
                     if cfg.minimize_to_tray {
                         api.prevent_close();
                         window_clone.hide().unwrap();
-                    } else {
                     }
                 }
             });
