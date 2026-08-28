@@ -24,14 +24,7 @@ pub fn run() {
             keyboard::init();
 
             let window = app.get_webview_window("main").unwrap();
-
-            // Force open DevTools to debug JavaScript errors
-            // (Remove this line after debugging)
-            window
-                .with_webview(|webview| {
-                    webview.open_devtools();
-                })
-                .unwrap();
+            window.open_devtools().unwrap();
 
             let window_clone = window.clone();
 
