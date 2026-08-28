@@ -24,7 +24,7 @@ pub fn run() {
             keyboard::init();
 
             let window = app.get_webview_window("main").unwrap();
-            window.open_devtools().unwrap();
+            window.open_devtools();
 
             let window_clone = window.clone();
 
