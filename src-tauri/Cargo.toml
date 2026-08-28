@@ -20,7 +20,7 @@ tauri-build = { version = "2", features = [] }
 [dependencies]
 
 # TAURI v2
-tauri = { version = "2", features = ["tray-icon"] }
+tauri = { version = "2", features = ["tray-icon", "devtools"] }
 
 # TAURI PLUGINS
 tauri-plugin-autostart = "2"
