@@ -1,12 +1,11 @@
 const VolumeSlider = (() => {
-
     let track = null;
     let fill = null;
     let thumb = null;
+    let label = null;
 
     let isDragging = false;
     let currentValue = 0.8;
-
     let debounceTimer = null;
 
     function init() {
@@ -31,20 +30,22 @@ const VolumeSlider = (() => {
         track.appendChild(thumb);
         container.appendChild(track);
 
+        label = document.getElementById("volume-label");
+
         currentValue = AppState.get("volume") || 0.8;
-        updateVisual(currentValue);
+        updateDisplay();
 
         attachEvents();
 
+        AppState.on("muted", () => updateDisplay());
+
         AppState.on("volume", (newValue) => {
             currentValue = newValue;
-            updateVisual(newValue);
-            updateLabel(newValue);
+            updateDisplay();
         });
     }
 
     function attachEvents() {
-
         track.addEventListener("mousedown", (e) => {
             isDragging = true;
             handleMove(e);
@@ -60,7 +61,6 @@ const VolumeSlider = (() => {
             if (!isDragging) return;
             isDragging = false;
             document.body.style.cursor = "";
-
             sendToBackend(currentValue);
         });
 
@@ -88,17 +88,17 @@ const VolumeSlider = (() => {
 
         let value = x / width;
         value = Math.max(0, Math.min(1, value));
-
         value = Math.round(value * 100) / 100;
 
         currentValue = value;
-
-        updateVisual(value);
-        updateLabel(value);
-
+        updateDisplay();
         AppState.set("volume", value);
 
-        debouncedSend(value);
+        if (AppState.get("muted")) {
+            unmuteAndSetVolume(value);
+        } else {
+            debouncedSend(value);
+        }
     }
 
     function handleTouch(e) {
@@ -113,34 +113,42 @@ const VolumeSlider = (() => {
         value = Math.round(value * 100) / 100;
 
         currentValue = value;
-        updateVisual(value);
-        updateLabel(value);
+        updateDisplay();
         AppState.set("volume", value);
-        debouncedSend(value);
+
+        if (AppState.get("muted")) {
+            unmuteAndSetVolume(value);
+        } else {
+            debouncedSend(value);
+        }
     }
 
-    function updateVisual(value) {
-        if (!fill || !thumb) return;
+    async function unmuteAndSetVolume(value) {
+        try {
+            const newMuted = await invoke("toggle_mute");
+            AppState.set("muted", newMuted);
+            debouncedSend(value);
+        } catch (error) {
+            console.error("[VolumeSlider] Failed to unmute:", error);
+        }
+    }
 
-        const percent = value * 100;
+    function updateDisplay() {
+        if (!fill || !thumb || !label) return;
+
+        const muted = AppState.get("muted");
+        const displayValue = muted ? 0 : currentValue;
+        const percent = displayValue * 100;
 
         fill.style.width = percent + "%";
-
         thumb.style.left = `calc(${percent}% - 7px)`;
-    }
-
-    function updateLabel(value) {
-        const label = document.getElementById("volume-label");
-        if (label) {
-            label.textContent = Math.round(value * 100) + "%";
-        }
+        label.textContent = Math.round(percent) + "%";
     }
 
     function debouncedSend(value) {
         if (debounceTimer) {
             clearTimeout(debounceTimer);
         }
-
         debounceTimer = setTimeout(() => {
             sendToBackend(value);
         }, 50);
@@ -156,15 +164,13 @@ const VolumeSlider = (() => {
 
     function setValue(value) {
         currentValue = value;
-        updateVisual(value);
-        updateLabel(value);
+        updateDisplay();
     }
 
     return {
         init,
         setValue,
     };
-
 })();
 
 window.VolumeSlider = VolumeSlider;
