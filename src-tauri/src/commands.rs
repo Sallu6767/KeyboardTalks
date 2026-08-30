@@ -107,6 +107,13 @@ pub fn play_test_sound(pack_id: String, category: String) -> Result<(), String> 
 }
 
 #[tauri::command]
+pub fn play_key(key_name: String) -> Result<(), String> {
+    let category = soundpack::get_key_category(&key_name);
+    audio::play(&key_name, category);
+    Ok(())
+}
+
+#[tauri::command]
 pub async fn validate_license(key: String) -> license::LicenseResult {
     license::validate_key(&key).await
 }
