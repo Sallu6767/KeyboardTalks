@@ -27,16 +27,27 @@ pub fn run() {
             window.open_devtools();
 
             let window_clone = window.clone();
-
+            
             window.on_window_event(move |event| {
-                if let tauri::WindowEvent::CloseRequested { api, .. } = event {
-                    let cfg = config::get();
-                    if cfg.minimize_to_tray {
-                        api.prevent_close();
-                        window_clone.hide().unwrap();
+                match event {
+                    tauri::WindowEvent::Focused(focused) => {
+                        if focused {
+                            keyboard::pause();
+                        } else {
+                            keyboard::resume();
+                        }
                     }
+                    tauri::WindowEvent::CloseRequested { api, .. } => {
+                        let cfg = config::get();
+                        if cfg.minimize_to_tray {
+                            api.prevent_close();
+                            window_clone.hide().unwrap();
+                        }
+                    }
+                    _ => {}
                 }
             });
+
 
             Ok(())
         })
