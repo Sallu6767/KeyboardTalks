@@ -7,6 +7,7 @@ const Mapper = (() => {
         setupKeyboardCallback();
         renderCustomSoundsList();
         renderMappingsList();
+        setupClearMappingsButton();
         subscribeToState();
 
         const buyBtn = document.getElementById("btn-buy-pro-mapper");
@@ -31,6 +32,26 @@ const Mapper = (() => {
                 TauriBridge.openExternal("https://www.myinstants.com");
             });
         }
+    }
+
+    function setupClearMappingsButton() {
+        const btn = document.getElementById("btn-clear-mappings");
+        if (!btn) return;
+
+        btn.addEventListener("click", async () => {
+            const confirmed = confirm("Are you sure you want to clear ALL key mappings? This cannot be undone.");
+            if (!confirmed) return;
+
+            try {
+                await invoke("clear_all_mappings");
+                AppState.set("custom_mappings", {});
+                renderMappingsList();
+                KeyboardVisual.refresh();
+                showToast("All mappings cleared", "success");
+            } catch (error) {
+                showToast(`Failed to clear mappings: ${error.message || error}`, "error");
+            }
+        });
     }
 
     function updateLockOverlay() {
