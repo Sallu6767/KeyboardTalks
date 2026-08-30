@@ -264,7 +264,9 @@ pub fn remove_mapping(key_name: String) -> Result<String, String> {
     if !license::is_pro() {
         return Err("Pro Pass required.".to_string());
     }
-    config::update(|c| c.custom_mappings.remove(&key_name));
+    config::update(|c| {
+        c.custom_mappings.remove(&key_name);
+    });
     audio::reload_custom_sounds();
     Ok(format!("Removed custom mapping for {}", key_name))
 }
