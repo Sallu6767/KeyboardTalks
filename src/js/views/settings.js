@@ -28,8 +28,8 @@ const Settings = (() => {
         const licenseKey = AppState.get("license_key");
 
         if (isPro) {
-            dot.className = "w-2 h-2 rounded-full bg-emerald-500";
-            text.className = "text-sm text-emerald-400 font-medium";
+            dot.className = "w-2 h-2 bg-[#FFFFFF]";
+            text.className = "text-sm text-white font-medium";
             text.textContent = "Pro Pass Active ✓";
 
             if (input && licenseKey) {
@@ -42,7 +42,7 @@ const Settings = (() => {
                 btn.textContent = "Activated ✓";
                 btn.disabled = true;
                 btn.classList.add("opacity-50", "cursor-not-allowed");
-                btn.classList.remove("hover:bg-indigo-500");
+                btn.classList.remove("hover:bg-[#E2E8F0]");
             }
 
             const buyParent = buySection?.closest("div");
@@ -52,8 +52,8 @@ const Settings = (() => {
             if (howItWorks) howItWorks.style.display = "none";
 
         } else {
-            dot.className = "w-2 h-2 rounded-full bg-gray-600";
-            text.className = "text-sm text-gray-400";
+            dot.className = "w-2 h-2 bg-[#A1A1AA]";
+            text.className = "text-sm text-[#A1A1AA]";
             text.textContent = "Free Plan";
 
             if (input) {
@@ -66,7 +66,7 @@ const Settings = (() => {
                 btn.textContent = "Activate";
                 btn.disabled = false;
                 btn.classList.remove("opacity-50", "cursor-not-allowed");
-                btn.classList.add("hover:bg-indigo-500");
+                btn.classList.add("hover:bg-[#E2E8F0]");
             }
         }
     }
@@ -153,7 +153,7 @@ const Settings = (() => {
 
         message.textContent = text;
         message.classList.remove("hidden", "text-emerald-400", "text-red-400");
-        message.classList.add(type === "success" ? "text-emerald-400" : "text-red-400");
+        message.classList.add(type === "success" ? "text-[#A1A1AA]" : "text-[#A1A1AA]");
     }
 
     function maskKey(key) {
