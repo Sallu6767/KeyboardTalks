@@ -80,6 +80,13 @@ pub fn run() {
             commands::get_custom_sound_files,
             commands::open_file_dialog,
             commands::play_key,
+            commands::turn_off,
+            commands::turn_on,
+            commands::set_default_custom_sound,
+            commands::clear_default_custom_sound,
+            commands::delete_custom_sound,
+            commands::play_custom_sound,
+            commands::clear_all_mappings,
         ])
         .run(tauri::generate_context!())
         .expect("error while running KeyboardTalks");
