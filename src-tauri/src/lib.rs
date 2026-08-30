@@ -31,10 +31,15 @@ pub fn run() {
             keyboard::init();
 
             let window = app.get_webview_window("main").unwrap();
+
+            if std::env::args().any(|arg| arg == "--minimized") {
+                window.hide().unwrap();
+            }
+
             window.open_devtools();
 
             let window_clone = window.clone();
-            
+
             window.on_window_event(move |event| {
                 match event {
                     tauri::WindowEvent::Focused(focused) => {
