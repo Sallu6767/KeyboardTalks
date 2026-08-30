@@ -149,28 +149,6 @@ pub fn clear_default_custom_sound() -> Result<(), String> {
 }
 
 #[tauri::command]
-pub fn delete_custom_sound(filename: String) -> Result<(), String> {
-    if !license::is_pro() {
-        return Err("Pro Pass required.".to_string());
-    }
-    let custom_dir = config::AppConfig::custom_sounds_dir();
-    let file_path = custom_dir.join(&filename);
-    if !file_path.exists() {
-        return Err(format!("File '{}' not found.", filename));
-    }
-    let mut config_mut = config::CONFIG.write();
-    let mappings = &mut config_mut.custom_mappings;
-    mappings.retain(|_, fname| fname != &filename);
-    if config_mut.default_custom_sound.as_deref() == Some(&filename) {
-        config_mut.default_custom_sound = None;
-    }
-    drop(config_mut);
-    fs::remove_file(file_path).map_err(|e| format!("Could not delete file: {}", e))?;
-    audio::reload_custom_sounds();
-    Ok(())
-}
-
-#[tauri::command]
 pub fn play_custom_sound(filename: String) -> Result<(), String> {
     if !license::is_pro() {
         return Err("Pro Pass required.".to_string());
@@ -190,6 +168,29 @@ pub fn clear_all_mappings() -> Result<(), String> {
         return Err("Pro Pass required.".to_string());
     }
     config::update(|c| c.custom_mappings.clear());
+    audio::reload_custom_sounds();
+    Ok(())
+}
+
+#[tauri::command]
+pub fn delete_custom_sound(filename: String) -> Result<(), String> {
+    if !license::is_pro() {
+        return Err("Pro Pass required.".to_string());
+    }
+    let custom_dir = config::AppConfig::custom_sounds_dir();
+    let file_path = custom_dir.join(&filename);
+    if !file_path.exists() {
+        return Err(format!("File '{}' not found.", filename));
+    }
+
+    config::update(|c| {
+        c.custom_mappings.retain(|_, fname| fname != &filename);
+        if c.default_custom_sound.as_deref() == Some(&filename) {
+            c.default_custom_sound = None;
+        }
+    });
+
+    fs::remove_file(file_path).map_err(|e| format!("Could not delete file: {}", e))?;
     audio::reload_custom_sounds();
     Ok(())
 }
