@@ -24,6 +24,7 @@ pub struct AudioEngine {
     stream_handle: OutputStreamHandle,
     sounds: HashMap<String, Arc<Vec<u8>>>,
     custom_sounds: HashMap<String, Arc<Vec<u8>>>,
+    default_custom: Option<Arc<Vec<u8>>>,
 }
 
 struct EngineWrapper(Option<AudioEngine>);
@@ -46,6 +47,7 @@ impl AudioEngine {
             stream_handle,
             sounds: HashMap::new(),
             custom_sounds: HashMap::new(),
+            default_custom: None,
         };
 
         engine.load_soundpack(soundpack_name)?;
@@ -117,10 +119,11 @@ impl AudioEngine {
 
     pub fn load_custom_sounds(&mut self) {
         self.custom_sounds.clear();
+        self.default_custom = None;
 
         let cfg = config::get();
 
-        if !cfg.is_pro || cfg.custom_mappings.is_empty() {
+        if !cfg.is_pro {
             return;
         }
 
@@ -161,11 +164,31 @@ impl AudioEngine {
             }
         }
 
+        if let Some(ref default_filename) = cfg.default_custom_sound {
+            let file_path = custom_dir.join(default_filename);
+            if file_path.exists() {
+                match validate_sound_file(&file_path) {
+                    Ok(_) => {
+                        match fs::read(&file_path) {
+                            Ok(bytes) => {
+                                self.default_custom = Some(Arc::new(bytes));
+                            }
+                            Err(e) => eprintln!("Could not read default custom sound {}: {}", default_filename, e),
+                        }
+                    }
+                    Err(e) => eprintln!("Invalid default custom sound {}: {}", default_filename, e),
+                }
+            } else {
+                eprintln!("Default custom sound file not found: {}", default_filename);
+            }
+        }
+
         println!(
-            "Custom sounds loaded: {} mappings ({} loaded, {} skipped/invalid)",
+            "Custom sounds loaded: {} mappings ({} loaded, {} skipped/invalid), default_custom: {}",
             cfg.custom_mappings.len(),
             loaded_count,
-            skipped_count
+            skipped_count,
+            if self.default_custom.is_some() { "loaded" } else { "none" }
         );
     }
 
@@ -175,9 +198,13 @@ impl AudioEngine {
         if cfg.muted {
             return;
         }
-
+        
         if cfg.is_pro {
             if let Some(buffer) = self.custom_sounds.get(key_name) {
+                self.play_buffer(buffer.clone(), cfg.volume);
+                return;
+            }
+            if let Some(ref buffer) = self.default_custom {
                 self.play_buffer(buffer.clone(), cfg.volume);
                 return;
             }
@@ -197,6 +224,17 @@ impl AudioEngine {
         let filename = format!("key_{}.wav", category);
         let bytes = self.load_bundled_sound_or_fallback(pack_id, &filename, category)?;
         self.play_buffer(Arc::new(bytes), config::get().volume);
+        Ok(())
+    }
+
+    pub fn play_custom_file(&self, file_path: &PathBuf) -> Result<(), String> {
+        let cfg = config::get();
+        if cfg.muted {
+            return Ok(());
+        }
+        validate_sound_file(file_path)?;
+        let bytes = fs::read(file_path).map_err(|e| format!("Could not read file: {}", e))?;
+        self.play_buffer(Arc::new(bytes), cfg.volume);
         Ok(())
     }
 
@@ -333,6 +371,15 @@ pub fn play_specific(pack_id: &str, category: &str) -> Result<(), String> {
     let lock = ENGINE.lock();
     if let Some(engine) = lock.0.as_ref() {
         engine.play_specific(pack_id, category)
+    } else {
+        Err("Audio engine not initialized".to_string())
+    }
+}
+
+pub fn play_custom_file(file_path: &PathBuf) -> Result<(), String> {
+    let lock = ENGINE.lock();
+    if let Some(engine) = lock.0.as_ref() {
+        engine.play_custom_file(file_path)
     } else {
         Err("Audio engine not initialized".to_string())
     }
