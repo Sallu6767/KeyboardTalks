@@ -43,7 +43,7 @@ pub fn run() {
             window.on_window_event(move |event| {
                 match event {
                     tauri::WindowEvent::Focused(focused) => {
-                        if focused {
+                        if *focused {
                             keyboard::pause();
                         } else {
                             keyboard::resume();
