@@ -69,27 +69,27 @@ const Mapper = (() => {
 
         const panel = document.createElement("div");
         panel.id = "assign-panel";
-        panel.className = "mt-2 bg-gray-800 rounded-lg p-3 border border-gray-700";
+        panel.className = "mt-2 bg-[#18181B] border border-[#27272A] p-3";
 
         let html = `
             <div class="flex items-center justify-between mb-2">
-                <p class="text-xs font-medium text-gray-300">
-                    Assign sound to: <span class="text-indigo-400 font-bold">${escapeText(keyId)}</span>
+                <p class="text-xs font-medium text-[#A1A1AA]">
+                    Assign sound to: <span class="text-white font-bold">${escapeText(keyId)}</span>
                 </p>
-                <button id="btn-close-assign" class="text-gray-500 hover:text-white text-sm">✕</button>
+                <button id="btn-close-assign" class="text-[#A1A1AA] hover:text-white text-sm">✕</button>
             </div>
         `;
 
         if (currentMapping) {
             const fileExists = files.includes(currentMapping);
             html += `
-                <div class="flex items-center justify-between bg-gray-900 rounded-md px-3 py-2 mb-2">
+                <div class="flex items-center justify-between bg-[#09090B] px-3 py-2 mb-2 border border-[#27272A]">
                     <div class="flex items-center gap-2">
-                        <span class="text-xs text-gray-500">Current:</span>
-                        <span class="text-xs text-indigo-300">${escapeText(currentMapping)}</span>
-                        ${!fileExists ? '<span class="text-xs text-red-400 ml-1">⚠️ missing</span>' : ''}
+                        <span class="text-xs text-[#A1A1AA]">Current:</span>
+                        <span class="text-xs text-white">${escapeText(currentMapping)}</span>
+                        ${!fileExists ? '<span class="text-xs text-[#A1A1AA] ml-1">⚠️ missing</span>' : ''}
                     </div>
-                    <button class="remove-current-btn text-xs text-red-400 hover:text-red-300">
+                    <button class="remove-current-btn text-xs text-[#A1A1AA] hover:text-white">
                         Remove
                     </button>
                 </div>
@@ -98,7 +98,7 @@ const Mapper = (() => {
 
         if (files.length === 0) {
             html += `
-                <p class="text-xs text-gray-600 italic">
+                <p class="text-xs text-[#A1A1AA] italic">
                     No sounds imported yet. Drop files in the import zone above.
                 </p>
             `;
@@ -110,17 +110,17 @@ const Mapper = (() => {
                 html += `
                     <button
                         class="assign-file-btn w-full flex items-center justify-between
-                               px-3 py-1.5 rounded text-xs transition-colors
+                               px-3 py-1.5 text-xs transition-colors
                                ${isActive
-                                   ? "bg-indigo-600 text-white"
-                                   : "bg-gray-900 text-gray-400 hover:bg-gray-700 hover:text-white"
+                                   ? "bg-white text-[#09090B]"
+                                   : "bg-[#09090B] text-[#A1A1AA] hover:bg-[#27272A] hover:text-white"
                                }"
                         data-filename="${escapeText(file)}"
                     >
                         <span class="truncate">${escapeText(file)}</span>
                         ${isActive
-                            ? '<span class="text-indigo-200">✓</span>'
-                            : '<span class="text-gray-600">Assign</span>'
+                            ? '<span class="text-[#09090B]">✓</span>'
+                            : '<span class="text-[#A1A1AA]">Assign</span>'
                         }
                     </button>
                 `;
@@ -214,7 +214,7 @@ const Mapper = (() => {
 
         if (files.length === 0) {
             container.innerHTML = `
-                <p class="text-xs text-gray-600 italic">
+                <p class="text-xs text-[#A1A1AA] italic">
                     No custom sounds imported yet
                 </p>
             `;
@@ -229,8 +229,8 @@ const Mapper = (() => {
 
             item.innerHTML = `
                 <div class="flex items-center gap-2 min-w-0">
-                    <span class="text-gray-500">🔊</span>
-                    <span class="truncate text-xs">${escapeText(file)}</span>
+                    <span class="text-[#A1A1AA]">🔊</span>
+                    <span class="truncate text-xs text-white">${escapeText(file)}</span>
                 </div>
             `;
 
@@ -248,7 +248,7 @@ const Mapper = (() => {
 
         if (keys.length === 0) {
             container.innerHTML = `
-                <p class="text-xs text-gray-600 italic">
+                <p class="text-xs text-[#A1A1AA] italic">
                     No keys mapped yet
                 </p>
             `;
@@ -266,19 +266,17 @@ const Mapper = (() => {
 
             item.innerHTML = `
                 <div class="flex items-center gap-2 min-w-0">
-                    <span class="text-xs font-mono text-indigo-400 font-bold
-                                 bg-indigo-950/50 px-1.5 py-0.5 rounded">
+                    <span class="text-xs font-mono text-white font-bold bg-[#09090B] px-1.5 py-0.5 border border-[#27272A]">
                         ${escapeText(keyName)}
                     </span>
-                    <span class="text-xs text-gray-500">→</span>
-                    <span class="text-xs text-gray-300 truncate">
+                    <span class="text-xs text-[#A1A1AA]">→</span>
+                    <span class="text-xs text-white truncate">
                         ${escapeText(fileName)}
-                        ${!fileExists ? '<span class="text-red-400 ml-1">⚠️ missing</span>' : ''}
+                        ${!fileExists ? '<span class="text-[#A1A1AA] ml-1">⚠️ missing</span>' : ''}
                     </span>
                 </div>
                 <button
-                    class="mapping-remove-btn text-xs text-red-400
-                           hover:text-red-300 transition-colors ml-2"
+                    class="mapping-remove-btn text-xs text-[#A1A1AA] hover:text-white transition-colors ml-2"
                     data-key="${escapeText(keyName)}"
                 >
                     ✕
