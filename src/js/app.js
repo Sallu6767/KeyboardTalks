@@ -85,16 +85,18 @@ const App = (() => {
     }
 
     function setupEventListeners() {
-        if (!window.__TAURI__ || !window.__TAURI__.core) return;
+        if (!window.__TAURI__) return;
 
-        const { listen } = window.__TAURI__.core;
-
-        listen("mute-changed", (event) => {
-            const muted = event.payload;
-            AppState.set("muted", muted);
-        }).catch((err) => {
-            console.warn("[App] Failed to listen for mute-changed event:", err);
-        });
+        if (window.__TAURI__.event) {
+            window.__TAURI__.event.listen("mute-changed", (event) => {
+                const muted = event.payload;
+                AppState.set("muted", muted);
+            }).catch((err) => {
+                console.warn("[App] Failed to listen for mute-changed event:", err);
+            });
+        } else {
+            console.warn("[App] Tauri event API not available");
+        }
     }
 
     return {
