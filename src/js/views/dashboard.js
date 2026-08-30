@@ -32,20 +32,19 @@ const Dashboard = (() => {
             card.innerHTML = `
                 <span class="text-2xl">${pack.icon}</span>
                 <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium text-gray-200">
+                    <p class="text-sm font-medium text-white">
                         ${escapeText(pack.name)}
                     </p>
-                    <p class="text-xs text-gray-500 truncate">
+                    <p class="text-xs text-[#A1A1AA] truncate">
                         ${escapeText(pack.description)}
                     </p>
                 </div>
                 <div class="flex items-center gap-2">
-                    <button class="preview-btn text-gray-500 hover:text-white
-                                   transition-colors text-sm" title="Preview">
+                    <button class="preview-btn text-[#A1A1AA] hover:text-white transition-colors text-sm" title="Preview">
                         ▶
                     </button>
                     ${pack.id === activePack
-                        ? '<span class="text-xs text-indigo-400 font-medium">Active</span>'
+                        ? '<span class="text-xs text-white font-medium">Active</span>'
                         : ""
                     }
                 </div>
