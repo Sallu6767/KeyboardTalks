@@ -69,21 +69,29 @@ pub fn toggle_startup(app: AppHandle) -> Result<bool, String> {
     let current = config::get().run_on_startup;
     let new_state = !current;
 
-    if new_state {
-     app.autolaunch()
-         .enable()
-         .map_err(|e| format!("Failed to enable autostart: {}", e))?;
- } else {
-     app.autolaunch()
-         .disable()
-         .map_err(|e| format!("Failed to disable autostart: {}", e))?;
- }
+    let result = if new_state {
+        app.autolaunch().enable()
+    } else {
+        app.autolaunch().disable()
+    };
 
-    config::update(|c| {
-        c.run_on_startup = new_state;
-    });
+    match result {
+        Ok(_) => {
+            config::update(|c| c.run_on_startup = new_state);
+            Ok(new_state)
+        }
+        Err(e) => {
+            let error_str = e.to_string();
 
-    Ok(new_state)
+            if !new_state && (error_str.contains("cannot find the file") || error_str.contains("os error 2")) {
+                config::update(|c| c.run_on_startup = false);
+                Ok(false)
+            } else {
+                config::update(|c| c.run_on_startup = current);
+                Err(format!("Failed to toggle autostart: {}", e))
+            }
+        }
+    }
 }
 
 #[tauri::command]
