@@ -11,24 +11,16 @@ pub static CONFIG: Lazy<RwLock<AppConfig>> = Lazy::new(|| {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AppConfig {
-
     pub active_soundpack: String,
-
     pub volume: f32,
-
     pub muted: bool,
-
     pub run_on_startup: bool,
-
     pub minimize_to_tray: bool,
-
     pub is_pro: bool,
-
     pub license_key: Option<String>,
-
     pub instance_id: String,
-
     pub custom_mappings: HashMap<String, String>,
+    pub default_custom_sound: Option<String>,
 }
 
 impl Default for AppConfig {
@@ -43,6 +35,7 @@ impl Default for AppConfig {
             license_key: None,
             instance_id: uuid::Uuid::new_v4().to_string(),
             custom_mappings: HashMap::new(),
+            default_custom_sound: None,
         }
     }
 }
@@ -52,12 +45,10 @@ impl AppConfig {
         let dir = dirs::config_dir()
             .expect("Could not find config directory")
             .join("keyboardtalks");
-
         if !dir.exists() {
             fs::create_dir_all(&dir)
                 .expect("Could not create config directory");
         }
-
         dir
     }
 
@@ -67,28 +58,22 @@ impl AppConfig {
 
     pub fn custom_sounds_dir() -> PathBuf {
         let dir = Self::config_dir().join("custom_sounds");
-
         if !dir.exists() {
             fs::create_dir_all(&dir)
                 .expect("Could not create custom sounds directory");
         }
-
         dir
     }
 
     pub fn load() -> Self {
         let path = Self::config_file_path();
-
         if path.exists() {
             match fs::read_to_string(&path) {
                 Ok(contents) => {
                     match serde_json::from_str::<AppConfig>(&contents) {
                         Ok(config) => return config,
                         Err(e) => {
-                            eprintln!(
-                                "Config file corrupted, resetting to defaults: {}",
-                                e
-                            );
+                            eprintln!("Config file corrupted, resetting to defaults: {}", e);
                         }
                     }
                 }
@@ -97,7 +82,6 @@ impl AppConfig {
                 }
             }
         }
-
         let config = AppConfig::default();
         config.save();
         config
@@ -105,7 +89,6 @@ impl AppConfig {
 
     pub fn save(&self) {
         let path = Self::config_file_path();
-
         match serde_json::to_string_pretty(self) {
             Ok(json) => {
                 if let Err(e) = fs::write(&path, json) {
