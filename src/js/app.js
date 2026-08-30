@@ -20,6 +20,20 @@ const App = (() => {
         setupEventListeners();
         console.log("[App] Event listeners initialized");
 
+        document.addEventListener("keydown", (e) => {
+            const keyName = e.code;
+
+            if (window.__TAURI__ && window.__TAURI__.core) {
+                const { invoke } = window.__TAURI__.core;
+                
+                invoke("play_key", { keyName }).catch(err => {
+                    console.warn("[App] play_key error:", err);
+                });
+            } else {
+                console.warn("[App] Tauri core not found. Keypress sound skipped.");
+            }
+        });
+
         switchTab("dashboard");
 
         console.log("[App] KeyboardTalks ready ✓");
@@ -71,9 +85,9 @@ const App = (() => {
     }
 
     function setupEventListeners() {
-        if (!window.__TAURI__) return;
+        if (!window.__TAURI__ || !window.__TAURI__.core) return;
 
-        const { listen } = window.__TAURI__.event;
+        const { listen } = window.__TAURI__.core;
 
         listen("mute-changed", (event) => {
             const muted = event.payload;
