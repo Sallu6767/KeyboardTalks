@@ -57,6 +57,7 @@ pub fn run() {
             commands::get_custom_mappings,
             commands::get_custom_sound_files,
             commands::open_file_dialog,
+            commands::play_key,
         ])
         .run(tauri::generate_context!())
         .expect("error while running KeyboardTalks");
