@@ -84,16 +84,6 @@ impl AudioEngine {
     ) -> Result<Vec<u8>, String> {
         let mut possible_paths = Vec::new();
 
-        possible_paths.push(PathBuf::from(format!("sounds/{}/{}", pack_name, filename)));
-        possible_paths.push(PathBuf::from(format!(
-            "../src-tauri/sounds/{}/{}",
-            pack_name, filename
-        )));
-        possible_paths.push(PathBuf::from(format!(
-            "src-tauri/sounds/{}/{}",
-            pack_name, filename
-        )));
-
         if let Ok(exe_path) = std::env::current_exe() {
             if let Some(exe_dir) = exe_path.parent() {
                 let res_dir = exe_dir.join("resources");
@@ -102,8 +92,14 @@ impl AudioEngine {
             }
         }
 
+        possible_paths.push(PathBuf::from(format!("sounds/{}/{}", pack_name, filename)));
+        possible_paths.push(PathBuf::from(format!("../src-tauri/sounds/{}/{}", pack_name, filename)));
+        possible_paths.push(PathBuf::from(format!("src-tauri/sounds/{}/{}", pack_name, filename)));
+
         for path in &possible_paths {
+            println!("[Audio] Trying path: {:?}", path);
             if path.exists() {
+                println!("[Audio] Found sound file at: {:?}", path);
                 return fs::read(path).map_err(|e| {
                     format!("Could not read sound file {:?}: {}", path, e)
                 });
