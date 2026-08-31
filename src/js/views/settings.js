@@ -21,7 +21,7 @@ const Settings = (() => {
         if (!btn) return;
 
         const isOff = AppState.get("is_turned_off") || false;
-        updateToggle(btn, !isOff);
+        updateToggle(btn, isOff);
 
         btn.addEventListener("click", async () => {
             const currentlyOff = AppState.get("is_turned_off") || false;
@@ -35,13 +35,26 @@ const Settings = (() => {
                 }
                 AppState.set("is_turned_off", newState);
                 const dashBtn = document.getElementById("btn-turn-off");
-                if (dashBtn) updateToggle(dashBtn, !newState);
-                updateToggle(btn, !newState);
+                if (dashBtn) updateToggle(dashBtn, newState);
+                updateToggle(btn, newState);
                 showToast(newState ? "KeyboardTalks turned off" : "KeyboardTalks turned on", "info");
             } catch (error) {
                 showToast("Failed to toggle", "error");
             }
         });
+
+        AppState.on("is_turned_off", (isOff) => {
+            updateToggle(btn, isOff);
+            const dashBtn = document.getElementById("btn-turn-off");
+            if (dashBtn) updateToggle(dashBtn, isOff);
+        });
+    }
+
+    function updateToggle(btn, isOn) {
+        if (!btn) return;
+        btn.classList.toggle("on", isOn);
+        btn.classList.toggle("off", !isOn);
+    }
 
         AppState.on("is_turned_off", (isOff) => {
             updateToggle(btn, !isOff);
