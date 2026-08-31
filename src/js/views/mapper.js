@@ -39,7 +39,13 @@ const Mapper = (() => {
         if (!btn) return;
 
         btn.addEventListener("click", async () => {
-            const confirmed = confirm("Are you sure you want to clear ALL key mappings? This cannot be undone.");
+            let confirmed = false;
+            if (window.__TAURI__ && window.__TAURI__.dialog) {
+                const { confirm } = window.__TAURI__.dialog;
+                confirmed = await confirm("Are you sure you want to clear ALL key mappings? This cannot be undone.", "Clear All Mappings");
+            } else {
+                confirmed = confirm("Are you sure you want to clear ALL key mappings? This cannot be undone.");
+            }
             if (!confirmed) return;
 
             try {
