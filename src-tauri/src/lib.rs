@@ -26,9 +26,6 @@ pub fn run() {
         }))
         .setup(|app| {
             config::init();
-
-            std::thread::sleep(std::time::Duration::from_millis(500));
-            
             audio::init();
             tray::init(app)?;
             keyboard::init();
