@@ -56,19 +56,6 @@ const Settings = (() => {
         btn.classList.toggle("off", !isOn);
     }
 
-        AppState.on("is_turned_off", (isOff) => {
-            updateToggle(btn, !isOff);
-            const dashBtn = document.getElementById("btn-turn-off");
-            if (dashBtn) updateToggle(dashBtn, !isOff);
-        });
-    }
-
-    function updateToggle(btn, isOn) {
-        if (!btn) return;
-        btn.classList.toggle("on", isOn);
-        btn.classList.toggle("off", !isOn);
-    }
-
     function updateProStatus() {
         const dot = document.getElementById("pro-status-dot");
         const text = document.getElementById("pro-status-text");
