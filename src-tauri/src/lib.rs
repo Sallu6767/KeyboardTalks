@@ -37,13 +37,21 @@ pub fn run() {
             }
 
             window.open_devtools();
+            
+            let cfg = config::get();
+            if cfg.is_turned_off {
+                keyboard::pause();
+                println!("Keyboard listener paused on startup (Turn Off was active)");
+            } else {
+                keyboard::resume();
+                println!("Keyboard listener active on startup");
+            }
 
             let window_clone = window.clone();
 
             window.on_window_event(move |event| {
                 match event {
                     tauri::WindowEvent::CloseRequested { api, .. } => {
-                        let cfg = config::get();
                         api.prevent_close();
                         window_clone.hide().unwrap();
                     }
