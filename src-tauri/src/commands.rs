@@ -91,6 +91,10 @@ pub fn play_test_sound(pack_id: String, category: String) -> Result<(), String> 
 
 #[tauri::command]
 pub fn play_key(key_name: String) -> Result<(), String> {
+    let cfg = config::get();
+    if cfg.is_turned_off {
+        return Ok(());
+    }
     let category = soundpack::get_key_category(&key_name);
     audio::play(&key_name, category);
     Ok(())
