@@ -30,7 +30,7 @@ impl Default for AppConfig {
             active_soundpack: "mechanical".to_string(),
             volume: 0.8,
             muted: false,
-            run_on_startup: false,
+            run_on_startup: true,
             minimize_to_tray: true,
             is_pro: true,
             license_key: None,
