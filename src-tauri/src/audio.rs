@@ -6,6 +6,7 @@ use std::fs;
 use std::io::{BufReader, Cursor, Write};
 use std::path::PathBuf;
 use std::sync::Arc;
+use std::time::Duration;
 
 use crate::config;
 
@@ -61,7 +62,7 @@ impl AudioEngine {
 
         for category in KEY_CATEGORIES {
             let filename = format!("key_{}.wav", category);
-            let bytes = self.load_bundled_sound_or_fallback(pack_name, &filename, category)?;
+            let bytes = self.load_bundled_sound_or_fallback_with_retry(pack_name, &filename, category)?;
             new_sounds.insert(category.to_string(), Arc::new(bytes));
         }
 
@@ -74,6 +75,40 @@ impl AudioEngine {
         );
 
         Ok(())
+    }
+
+    fn load_bundled_sound_or_fallback_with_retry(
+        &self,
+        pack_name: &str,
+        filename: &str,
+        category: &str,
+    ) -> Result<Vec<u8>, String> {
+        let mut attempts = 0;
+        let max_attempts = 5;
+        let base_delay = Duration::from_millis(200);
+
+        loop {
+            let result = self.load_bundled_sound_or_fallback(pack_name, filename, category);
+            match result {
+                Ok(bytes) => return Ok(bytes),
+                Err(_) if attempts < max_attempts => {
+                    attempts += 1;
+                    let delay = base_delay * attempts;
+                    println!(
+                        "[Audio] Retry {} for {}/{} in {}ms",
+                        attempts, pack_name, filename, delay.as_millis()
+                    );
+                    std::thread::sleep(delay);
+                }
+                Err(e) => {
+                    eprintln!(
+                        "Sound file not found after {} attempts: {}/{}, generating fallback sine wave for category '{}'",
+                        max_attempts, pack_name, filename, category
+                    );
+                    return Ok(generate_sine_wave_wav(440.0, 0.15, 44100));
+                }
+            }
+        }
     }
 
     fn load_bundled_sound_or_fallback(
@@ -106,11 +141,7 @@ impl AudioEngine {
             }
         }
 
-        eprintln!(
-            "Sound file not found: {}/{}, generating fallback sine wave for category '{}'",
-            pack_name, filename, category
-        );
-        Ok(generate_sine_wave_wav(440.0, 0.15, 44100))
+        Err(format!("No sound file found for {}/{}", pack_name, filename))
     }
 
     pub fn load_custom_sounds(&mut self) {
