@@ -21,6 +21,7 @@ pub struct AppConfig {
     pub instance_id: String,
     pub custom_mappings: HashMap<String, String>,
     pub default_custom_sound: Option<String>,
+    pub is_turned_off: bool,
 }
 
 impl Default for AppConfig {
@@ -36,6 +37,7 @@ impl Default for AppConfig {
             instance_id: uuid::Uuid::new_v4().to_string(),
             custom_mappings: HashMap::new(),
             default_custom_sound: None,
+            is_turned_off: false,
         }
     }
 }
@@ -105,11 +107,12 @@ impl AppConfig {
 pub fn init() {
     let config = CONFIG.read();
     println!(
-        "Config loaded: soundpack={}, volume={}, muted={}, pro={}",
+        "Config loaded: soundpack={}, volume={}, muted={}, pro={}, turned_off={}",
         config.active_soundpack,
         config.volume,
         config.muted,
-        config.is_pro
+        config.is_pro,
+        config.is_turned_off
     );
 }
 
