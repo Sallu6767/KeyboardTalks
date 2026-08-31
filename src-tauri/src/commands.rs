@@ -109,12 +109,14 @@ pub fn check_pro_status() -> bool {
 #[tauri::command]
 pub fn turn_off() -> Result<(), String> {
     keyboard::pause();
+    config::update(|c| c.is_turned_off = true);
     Ok(())
 }
 
 #[tauri::command]
 pub fn turn_on() -> Result<(), String> {
     keyboard::resume();
+    config::update(|c| c.is_turned_off = false);
     Ok(())
 }
 
