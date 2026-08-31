@@ -10,7 +10,6 @@ const Dashboard = (() => {
         renderSoundpacks();
         setupMuteButton();
         setupStartupToggle();
-        setupTrayToggle();
         setupProBanner();
         initVolumeSlider();
         setupTurnOffButton();
@@ -272,27 +271,6 @@ const Dashboard = (() => {
                 showToast(newState ? "Will start on boot" : "Won't start on boot", "info");
             } catch (error) {
                 showToast("Failed to update startup setting", "error");
-            }
-        });
-    }
-
-    function setupTrayToggle() {
-        const btn = document.getElementById("btn-tray");
-        if (!btn) return;
-
-        const initial = AppState.get("minimize_to_tray");
-        updateToggle(btn, initial);
-
-        btn.addEventListener("click", async () => {
-            const newState = !AppState.get("minimize_to_tray");
-            try {
-                const result = await invoke("set_minimize_to_tray", { enabled: newState });
-                AppState.set("minimize_to_tray", result);
-                updateToggle(btn, result);
-                showToast(result ? "Will minimize to tray" : "Will close normally", "info");
-            } catch (error) {
-                showToast("Failed to update minimize to tray setting", "error");
-                console.error(error);
             }
         });
     }
