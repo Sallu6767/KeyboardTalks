@@ -22,7 +22,8 @@ const Dashboard = (() => {
 
         const packs = AppState.get("soundpacks") || [];
         const activePack = AppState.get("active_soundpack");
-        const customFiles = AppState.get("custom_sound_files") || [];
+        // Reverse to show newest first
+        const customFiles = [...AppState.get("custom_sound_files") || []].reverse();
         const isPro = AppState.get("is_pro");
 
         container.innerHTML = "";
@@ -160,12 +161,18 @@ const Dashboard = (() => {
     }
 
     async function deleteCustomSound(filename) {
-        const confirmed = confirm(`Are you sure you want to delete "${filename}"?`);
+        // Use Tauri dialog plugin
+        let confirmed = false;
+        if (window.__TAURI__ && window.__TAURI__.dialog) {
+            const { confirm } = window.__TAURI__.dialog;
+            confirmed = await confirm(`Are you sure you want to delete "${filename}"?`, "Delete Sound");
+        } else {
+            confirmed = confirm(`Are you sure you want to delete "${filename}"?`);
+        }
         if (!confirmed) return;
 
         try {
             await invoke("delete_custom_sound", { filename });
-            // Update local state
             const files = AppState.get("custom_sound_files") || [];
             const newFiles = files.filter(f => f !== filename);
             AppState.set("custom_sound_files", newFiles);
@@ -200,7 +207,7 @@ const Dashboard = (() => {
         if (!btn) return;
 
         const isOff = AppState.get("is_turned_off") || false;
-        updateToggle(btn, !isOff);
+        updateToggle(btn, isOff); // ON when turned off
 
         btn.addEventListener("click", async () => {
             const currentlyOff = AppState.get("is_turned_off") || false;
@@ -214,8 +221,8 @@ const Dashboard = (() => {
                 }
                 AppState.set("is_turned_off", newState);
                 const settingsBtn = document.getElementById("btn-turn-off-settings");
-                if (settingsBtn) updateToggle(settingsBtn, !newState);
-                updateToggle(btn, !newState);
+                if (settingsBtn) updateToggle(settingsBtn, newState);
+                updateToggle(btn, newState);
                 showToast(newState ? "KeyboardTalks turned off" : "KeyboardTalks turned on", "info");
             } catch (error) {
                 showToast("Failed to toggle", "error");
@@ -223,9 +230,9 @@ const Dashboard = (() => {
         });
 
         AppState.on("is_turned_off", (isOff) => {
-            updateToggle(btn, !isOff);
+            updateToggle(btn, isOff);
             const settingsBtn = document.getElementById("btn-turn-off-settings");
-            if (settingsBtn) updateToggle(settingsBtn, !isOff);
+            if (settingsBtn) updateToggle(settingsBtn, isOff);
         });
     }
 
