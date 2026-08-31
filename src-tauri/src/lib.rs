@@ -68,7 +68,6 @@ pub fn run() {
             commands::set_volume,
             commands::toggle_mute,
             commands::toggle_startup,
-            commands::set_minimize_to_tray,
             commands::get_soundpacks,
             commands::play_test_sound,
             commands::validate_license,
