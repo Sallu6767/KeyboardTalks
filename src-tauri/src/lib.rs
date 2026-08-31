@@ -42,19 +42,10 @@ pub fn run() {
 
             window.on_window_event(move |event| {
                 match event {
-                    tauri::WindowEvent::Focused(focused) => {
-                        if *focused {
-                            keyboard::pause();
-                        } else {
-                            keyboard::resume();
-                        }
-                    }
                     tauri::WindowEvent::CloseRequested { api, .. } => {
                         let cfg = config::get();
-                        if cfg.minimize_to_tray {
-                            api.prevent_close();
-                            window_clone.hide().unwrap();
-                        }
+                        api.prevent_close();
+                        window_clone.hide().unwrap();
                     }
                     _ => {}
                 }
