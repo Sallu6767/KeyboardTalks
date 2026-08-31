@@ -76,12 +76,6 @@ pub fn toggle_startup(app: AppHandle) -> Result<bool, String> {
 }
 
 #[tauri::command]
-pub fn set_minimize_to_tray(enabled: bool) -> Result<bool, String> {
-    config::update(|c| c.minimize_to_tray = enabled);
-    Ok(enabled)
-}
-
-#[tauri::command]
 pub fn get_soundpacks() -> Vec<soundpack::SoundPackInfo> {
     soundpack::get_all_packs()
 }
