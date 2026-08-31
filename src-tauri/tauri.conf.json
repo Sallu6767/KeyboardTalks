@@ -13,7 +13,7 @@
       "title": "KeyboardTalks",
       "width": 420,
       "height": 580,
-      "resizable": false,
+      "resizable": true,
       "fullscreen": false,
       "center": true,
       "visible": true,
