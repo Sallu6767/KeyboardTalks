@@ -6,7 +6,7 @@ const AppState = (() => {
         muted: false,
         run_on_startup: false,
         minimize_to_tray: true,
-        is_pro: false,
+        is_pro: true,
         license_key: null,
         custom_mappings: {},
         current_tab: "dashboard",
@@ -77,7 +77,7 @@ const AppState = (() => {
                 is_pro: config.is_pro,
                 license_key: config.license_key,
                 custom_mappings: config.custom_mappings,
-                is_turned_off: false,
+                is_turned_off: config.is_turned_off || false,
             });
 
             const packs = await invoke("get_soundpacks");
