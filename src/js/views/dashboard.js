@@ -22,7 +22,6 @@ const Dashboard = (() => {
 
         const packs = AppState.get("soundpacks") || [];
         const activePack = AppState.get("active_soundpack");
-        // Reverse to show newest first
         const customFiles = [...AppState.get("custom_sound_files") || []].reverse();
         const isPro = AppState.get("is_pro");
 
@@ -35,11 +34,11 @@ const Dashboard = (() => {
 
         if (isPro && customFiles.length > 0) {
             const divider = document.createElement("div");
-            divider.className = "border-t border-[#27272A] my-2";
+            divider.className = "border-t border-[rgba(255,255,255,0.06)] my-2";
             container.appendChild(divider);
 
             const label = document.createElement("p");
-            label.className = "text-xs text-[#A1A1AA] uppercase tracking-wider mb-2";
+            label.className = "text-xs text-[#94A3B8] uppercase tracking-wider mb-2";
             label.textContent = "Custom Sounds";
             container.appendChild(label);
 
@@ -51,7 +50,7 @@ const Dashboard = (() => {
 
             if (customFiles.length > customSoundsVisible) {
                 const showMoreBtn = document.createElement("button");
-                showMoreBtn.className = "w-full py-2 mt-2 border border-[#27272A] bg-[#18181B] text-[#A1A1AA] hover:bg-[#27272A] hover:text-white transition-colors text-sm";
+                showMoreBtn.className = "w-full py-2 mt-2 border border-[rgba(255,255,255,0.06)] bg-[#111D3A] text-[#94A3B8] hover:bg-[#1A2A4A] hover:text-white transition-colors text-sm";
                 showMoreBtn.textContent = `Show More (${customFiles.length - customSoundsVisible} remaining)`;
                 showMoreBtn.addEventListener("click", () => {
                     customSoundsVisible += 6;
@@ -71,11 +70,11 @@ const Dashboard = (() => {
             <span class="text-2xl">${pack.icon}</span>
             <div class="flex-1 min-w-0">
                 <p class="text-sm font-medium text-white">${escapeText(pack.name)}</p>
-                <p class="text-xs text-[#A1A1AA] truncate">${escapeText(pack.description)}</p>
+                <p class="text-xs text-[#94A3B8] truncate">${escapeText(pack.description)}</p>
             </div>
             <div class="flex items-center gap-2">
-                <button class="preview-btn text-[#A1A1AA] hover:text-white transition-colors text-sm" title="Preview">▶</button>
-                ${pack.id === activePack ? '<span class="text-xs text-white font-medium">Active</span>' : ""}
+                <button class="preview-btn text-[#94A3B8] hover:text-white transition-colors text-sm" title="Preview">▶</button>
+                ${pack.id === activePack ? '<span class="text-xs text-[#4ADE80] font-medium">Active</span>' : ""}
             </div>
         `;
 
@@ -103,12 +102,12 @@ const Dashboard = (() => {
             <span class="text-2xl">🎵</span>
             <div class="flex-1 min-w-0">
                 <p class="text-sm font-medium text-white">${escapeText(filename)}</p>
-                <p class="text-xs text-[#A1A1AA] truncate">Custom sound</p>
+                <p class="text-xs text-[#94A3B8] truncate">Custom sound</p>
             </div>
             <div class="flex items-center gap-2">
-                <button class="preview-btn text-[#A1A1AA] hover:text-white transition-colors text-sm" title="Preview">▶</button>
-                <button class="delete-custom-btn text-[#A1A1AA] hover:text-red-400 transition-colors text-sm" title="Delete">✕</button>
-                ${isActive ? '<span class="text-xs text-white font-medium">Active</span>' : ""}
+                <button class="preview-btn text-[#94A3B8] hover:text-white transition-colors text-sm" title="Preview">▶</button>
+                <button class="delete-custom-btn text-[#94A3B8] hover:text-[#EF4444] transition-colors text-sm" title="Delete">✕</button>
+                ${isActive ? '<span class="text-xs text-[#4ADE80] font-medium">Active</span>' : ""}
             </div>
         `;
 
@@ -161,7 +160,6 @@ const Dashboard = (() => {
     }
 
     async function deleteCustomSound(filename) {
-        // Use Tauri dialog plugin
         let confirmed = false;
         if (window.__TAURI__ && window.__TAURI__.dialog) {
             const { confirm } = window.__TAURI__.dialog;
@@ -207,7 +205,7 @@ const Dashboard = (() => {
         if (!btn) return;
 
         const isOff = AppState.get("is_turned_off") || false;
-        updateToggle(btn, isOff); // ON when turned off
+        updateToggle(btn, isOff);
 
         btn.addEventListener("click", async () => {
             const currentlyOff = AppState.get("is_turned_off") || false;
@@ -403,7 +401,7 @@ const Dashboard = (() => {
 
         msg.textContent = text;
         msg.classList.remove("hidden", "text-emerald-400", "text-red-400");
-        msg.classList.add(type === "success" ? "text-emerald-400" : "text-red-400");
+        msg.classList.add(type === "success" ? "text-[#4ADE80]" : "text-[#EF4444]");
     }
 
     function subscribeToState() {
