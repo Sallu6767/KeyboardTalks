@@ -225,13 +225,13 @@ export default function WebDemo() {
     const getKeySizeClass = (size: string) => {
         switch (size) {
             case "wide":
-                return "flex-1 min-w-[70px] sm:min-w-[85px] bg-[#18181B] hover:bg-[#27272A] text-[10px] font-bold text-[#A1A1AA] border border-[#27272A]";
+                return "flex-1 min-w-[70px] sm:min-w-[85px] bg-[#111D3A] hover:bg-[#1A2A4A] text-[10px] font-bold text-[#94A3B8] border border-[rgba(255,255,255,0.06)]";
             case "extra-wide":
-                return "flex-1 min-w-[80px] sm:min-w-[100px] bg-[#18181B] hover:bg-[#27272A] text-[10px] font-bold text-[#A1A1AA] border border-[#27272A]";
+                return "flex-1 min-w-[80px] sm:min-w-[100px] bg-[#111D3A] hover:bg-[#1A2A4A] text-[10px] font-bold text-[#94A3B8] border border-[rgba(255,255,255,0.06)]";
             case "spacebar":
-                return "w-full max-w-[280px] sm:max-w-[400px] bg-[#27272A] border border-white text-white text-xs py-2.5 font-black uppercase tracking-wider";
+                return "w-full max-w-[280px] sm:max-w-[400px] bg-[#1A2A4A] border border-[#4ADE80] text-[#4ADE80] text-xs py-2.5 font-black uppercase tracking-wider";
             default:
-                return "w-8 h-8 sm:w-10 sm:h-10 text-xs font-semibold text-[#A1A1AA] border border-[#27272A] bg-[#18181B]";
+                return "w-8 h-8 sm:w-10 sm:h-10 text-xs font-semibold text-[#94A3B8] border border-[rgba(255,255,255,0.06)] bg-[#111D3A]";
         }
     };
 
@@ -243,15 +243,15 @@ export default function WebDemo() {
                     <h2 className="text-3xl font-black text-white tracking-tight">
                         Try it right now
                     </h2>
-                    <p className="mt-3 text-sm text-[#A1A1AA]">
+                    <p className="mt-3 text-sm text-[#94A3B8]">
                         Pick a sound pack, click inside the box, and start typing on
                         your physical keyboard.
                     </p>
                 </div>
 
-                <div className="bg-[#18181B] border border-[#27272A] overflow-hidden">
+                <div className="bg-[#111D3A] border border-[rgba(255,255,255,0.06)] overflow-hidden">
 
-                    <div className="flex border-b border-[#27272A] bg-[#09090B]">
+                    <div className="flex border-b border-[rgba(255,255,255,0.06)] bg-[#0A1128]">
                         {DEMO_PACKS.map((pack) => (
                             <button
                                 key={pack.id}
@@ -259,8 +259,8 @@ export default function WebDemo() {
                                 className={`
                                     flex-1 py-3 text-sm font-bold transition-all duration-200
                                     ${activePack === pack.id
-                                        ? "bg-[#18181B] text-white border-b-2 border-white"
-                                        : "text-[#A1A1AA] hover:text-white hover:bg-[#18181B]"
+                                        ? "bg-[#111D3A] text-white border-b-2 border-[#4ADE80]"
+                                        : "text-[#94A3B8] hover:text-white hover:bg-[#111D3A]"
                                     }
                                 `}
                             >
@@ -272,21 +272,21 @@ export default function WebDemo() {
                     <div className="p-6">
 
                         {isLoading && (
-                            <div className="flex items-center justify-center gap-2 mb-4 text-xs text-[#A1A1AA]">
-                                <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent animate-spin" />
+                            <div className="flex items-center justify-center gap-2 mb-4 text-xs text-[#94A3B8]">
+                                <div className="w-3.5 h-3.5 border-2 border-[#4ADE80] border-t-transparent animate-spin" />
                                 Pre-loading sound buffers...
                             </div>
                         )}
 
                         {loadError && !isLoading && (
-                            <div className="mb-4 text-xs text-[#A1A1AA] text-center font-medium">
+                            <div className="mb-4 text-xs text-[#94A3B8] text-center font-medium">
                                 Some sound assets could not be loaded – fallback tones are used.
                             </div>
                         )}
 
                         {!isFocused && (
                             <div className="mb-3 text-center">
-                                <span className="text-xs text-white font-bold bg-[#09090B] px-3 py-1 border border-[#27272A] animate-pulse">
+                                <span className="text-xs text-white font-bold bg-[#0A1128] px-3 py-1 border border-[rgba(255,255,255,0.06)] animate-pulse">
                                     👆 Click below to activate typing demo
                                 </span>
                             </div>
@@ -304,20 +304,20 @@ export default function WebDemo() {
                                 placeholder="Start typing on your real keyboard right here..."
                                 rows={4}
                                 className={`
-                                    w-full bg-[#09090B] border px-4 py-3
+                                    w-full bg-[#0A1128] border px-4 py-3
                                     text-white text-sm font-mono resize-none
-                                    placeholder:text-[#A1A1AA]
+                                    placeholder:text-[#94A3B8]
                                     focus:outline-none transition-all duration-300
                                     ${isFocused
-                                        ? "border-white"
-                                        : "border-[#27272A]"
+                                        ? "border-[#4ADE80]"
+                                        : "border-[rgba(255,255,255,0.06)]"
                                     }
                                 `}
                             />
                         </div>
 
                         <div className="flex items-center justify-between mt-2">
-                            <span className="text-xs text-[#A1A1AA]">
+                            <span className="text-xs text-[#94A3B8]">
                                 {typedText.length} characters typed
                             </span>
                             {typedText.length > 0 && (
@@ -325,7 +325,7 @@ export default function WebDemo() {
                                     type="button"
                                     onMouseDown={(e) => e.preventDefault()}
                                     onClick={handleClearText}
-                                    className="text-xs text-[#A1A1AA] hover:text-white transition-colors font-medium cursor-pointer"
+                                    className="text-xs text-[#94A3B8] hover:text-white transition-colors font-medium cursor-pointer"
                                 >
                                     Clear Text
                                 </button>
@@ -333,7 +333,7 @@ export default function WebDemo() {
                         </div>
                     </div>
 
-                    <div className="px-6 pb-4 pt-2 border-t border-[#27272A] bg-[#09090B]">
+                    <div className="px-6 pb-4 pt-2 border-t border-[rgba(255,255,255,0.06)] bg-[#0A1128]">
                         <div className="flex flex-col gap-1.5 justify-center items-center">
                             {KEYBOARD_ROWS.map((row, rowIndex) => (
                                 <div
@@ -349,8 +349,8 @@ export default function WebDemo() {
                                                     h-9 sm:h-10 flex items-center justify-center
                                                     border transition-all duration-75 select-none
                                                     ${isPressed
-                                                        ? "bg-white border-white text-[#09090B] scale-95"
-                                                        : "bg-[#18181B] border-[#27272A] text-[#A1A1AA]"
+                                                        ? "bg-[#4ADE80] border-[#4ADE80] text-[#0A1128] scale-95"
+                                                        : "bg-[#111D3A] border-[rgba(255,255,255,0.06)] text-[#94A3B8]"
                                                     }
                                                     ${getKeySizeClass(key.size)}
                                                 `}
@@ -363,27 +363,27 @@ export default function WebDemo() {
                             ))}
                         </div>
 
-                        <p className="mt-4 text-center text-xs text-[#A1A1AA] italic leading-relaxed">
+                        <p className="mt-4 text-center text-xs text-[#94A3B8] italic leading-relaxed">
                             * The virtual layout shows common keys, but typing on your
                             physical keyboard works system-wide for every character.
                         </p>
                     </div>
 
-                    <div className="mx-6 mb-6 bg-[#09090B] border border-white p-4">
+                    <div className="mx-6 mb-6 bg-[#0A1128] border border-[#4ADE80] p-4">
                         <p className="text-center text-sm text-white">
                             <span className="font-bold text-white">✨ Like this?</span>{" "}
                             Assign any sound to any key with the{" "}
-                            <span className="font-bold text-white">Pro Pass</span> on the
+                            <span className="font-bold text-[#4ADE80]">Pro Pass</span> on the
                             desktop app.
                         </p>
                     </div>
 
-                    <div className="px-6 py-4 border-t border-[#27272A] bg-[#09090B]">
-                        <p className="text-center text-sm text-[#A1A1AA]">
+                    <div className="px-6 py-4 border-t border-[rgba(255,255,255,0.06)] bg-[#0A1128]">
+                        <p className="text-center text-sm text-[#94A3B8]">
                             Satisfying typing feedback starts here.{" "}
                             <a
                                 href="#pricing"
-                                className="text-white hover:text-[#A1A1AA] font-bold transition-colors"
+                                className="text-[#4ADE80] hover:text-white font-bold transition-colors"
                             >
                                 Download the App Free →
                             </a>
@@ -391,7 +391,7 @@ export default function WebDemo() {
                     </div>
                 </div>
 
-                <p className="mt-4 text-center text-xs text-[#A1A1AA] leading-relaxed">
+                <p className="mt-4 text-center text-xs text-[#94A3B8] leading-relaxed">
                     Browser audio engine has typical platform delays. The desktop
                     companion runs native Rust audio engines for an imperceptible{" "}
                     <span className="text-white font-semibold">~3-8ms latency</span>.
