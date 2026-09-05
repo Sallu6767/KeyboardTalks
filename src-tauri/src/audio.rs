@@ -26,6 +26,7 @@ pub struct AudioEngine {
     sounds: HashMap<String, Arc<Vec<u8>>>,
     custom_sounds: HashMap<String, Arc<Vec<u8>>>,
     default_custom: Option<Arc<Vec<u8>>>,
+    pub used_fallback: bool,
 }
 
 struct EngineWrapper(Option<AudioEngine>);
@@ -49,6 +50,7 @@ impl AudioEngine {
             sounds: HashMap::new(),
             custom_sounds: HashMap::new(),
             default_custom: None,
+            used_fallback: false,
         };
 
         engine.load_soundpack(soundpack_name)?;
@@ -59,19 +61,25 @@ impl AudioEngine {
 
     pub fn load_soundpack(&mut self, pack_name: &str) -> Result<(), String> {
         let mut new_sounds = HashMap::new();
+        let mut any_fallback = false;
 
         for category in KEY_CATEGORIES {
             let filename = format!("key_{}.wav", category);
-            let bytes = self.load_bundled_sound_or_fallback_with_retry(pack_name, &filename, category)?;
+            let (bytes, used_fallback) = self.load_bundled_sound_or_fallback_with_retry(pack_name, &filename, category)?;
             new_sounds.insert(category.to_string(), Arc::new(bytes));
+            if used_fallback {
+                any_fallback = true;
+            }
         }
 
         self.sounds = new_sounds;
+        self.used_fallback = any_fallback;
 
         println!(
-            "Soundpack '{}' loaded: {} sounds in memory",
+            "Soundpack '{}' loaded: {} sounds in memory (fallback used: {})",
             pack_name,
-            self.sounds.len()
+            self.sounds.len(),
+            any_fallback
         );
 
         Ok(())
@@ -82,7 +90,7 @@ impl AudioEngine {
         pack_name: &str,
         filename: &str,
         category: &str,
-    ) -> Result<Vec<u8>, String> {
+    ) -> Result<(Vec<u8>, bool), String> {
         let mut attempts = 0;
         let max_attempts = 5;
         let base_delay = Duration::from_millis(300);
@@ -90,7 +98,7 @@ impl AudioEngine {
         loop {
             let result = self.load_bundled_sound_or_fallback(pack_name, filename, category);
             match result {
-                Ok(bytes) => return Ok(bytes),
+                Ok(bytes) => return Ok((bytes, false)),
                 Err(_) if attempts < max_attempts => {
                     attempts += 1;
                     let delay = base_delay * attempts;
@@ -105,7 +113,7 @@ impl AudioEngine {
                         "Sound file not found after {} attempts: {}/{}, generating fallback sine wave for category '{}'",
                         max_attempts, pack_name, filename, category
                     );
-                    return Ok(generate_sine_wave_wav(440.0, 0.15, 44100));
+                    return Ok((generate_sine_wave_wav(440.0, 0.15, 44100), true));
                 }
             }
         }
@@ -279,7 +287,13 @@ impl AudioEngine {
                     Err(e) => eprintln!("Could not create audio sink: {}", e),
                 }
             }
-            Err(e) => eprintln!("Could not decode audio: {}", e),
+            Err(e) => {
+                eprintln!("Could not decode audio: {}", e);
+                if let Some(default_buffer) = self.sounds.get("default") {
+                    eprintln!("[Audio] Falling back to default sound");
+                    self.play_buffer(default_buffer.clone(), volume);
+                }
+            }
         }
     }
 }
@@ -329,8 +343,22 @@ pub fn init() {
     let cfg = config::get();
     match AudioEngine::new(&cfg.active_soundpack) {
         Ok(engine) => {
-            let mut lock = ENGINE.lock();
-            lock.0 = Some(engine);
+            let used_fallback = engine.used_fallback;
+            {
+                let mut lock = ENGINE.lock();
+                lock.0 = Some(engine);
+            }
+
+            if used_fallback {
+                let pack = cfg.active_soundpack.clone();
+                println!("[Audio] Fallback was used, scheduling background retry in 5 seconds...");
+                std::thread::spawn(move || {
+                    std::thread::sleep(std::time::Duration::from_secs(5));
+                    println!("[Audio] Background retry for soundpack: {}", pack);
+                    let _ = switch_soundpack(&pack);
+                });
+            }
+
             println!("Audio engine initialized");
         }
         Err(e) => {
