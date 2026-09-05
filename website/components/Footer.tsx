@@ -9,7 +9,7 @@ export default function Footer() {
     const currentYear = new Date().getFullYear();
 
     return (
-        <footer className="border-t border-[#27272A] py-10 px-4">
+        <footer className="border-t border-[rgba(255,255,255,0.06)] py-10 px-4">
             <div className="max-w-4xl mx-auto">
 
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-8">
@@ -25,34 +25,34 @@ export default function Footer() {
                             href={LINKS.github}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-sm text-[#A1A1AA] hover:text-white transition-colors"
+                            className="text-sm text-[#94A3B8] hover:text-white transition-colors"
                         >
                             GitHub
                         </a>
                         <a
                             href={LINKS.privacy}
-                            className="text-sm text-[#A1A1AA] hover:text-white transition-colors"
+                            className="text-sm text-[#94A3B8] hover:text-white transition-colors"
                         >
                             Privacy Policy
                         </a>
                         <a
                             href={LINKS.terms}
-                            className="text-sm text-[#A1A1AA] hover:text-white transition-colors"
+                            className="text-sm text-[#94A3B8] hover:text-white transition-colors"
                         >
                             Terms of Service
                         </a>
                         <a
                             href={LINKS.support}
-                            className="text-sm text-[#A1A1AA] hover:text-white transition-colors"
+                            className="text-sm text-[#94A3B8] hover:text-white transition-colors"
                         >
                             Support
                         </a>
                     </nav>
                 </div>
 
-                <div className="border-t border-[#27272A] mb-8" />
+                <div className="border-t border-[rgba(255,255,255,0.06)] mb-8" />
 
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#A1A1AA]">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#94A3B8]">
                     <p>
                         © {currentYear} KeyboardTalks. All rights reserved.
                     </p>
@@ -63,7 +63,7 @@ export default function Footer() {
                             href="https://lemonsqueezy.com"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-[#A1A1AA] hover:text-white transition-colors underline"
+                            className="text-[#94A3B8] hover:text-white transition-colors underline"
                         >
                             Lemon Squeezy
                         </a>
