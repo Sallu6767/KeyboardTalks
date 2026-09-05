@@ -80,7 +80,7 @@ export default function FAQ() {
                     <h2 className="text-3xl font-black text-white">
                         Frequently asked questions
                     </h2>
-                    <p className="mt-3 text-[#A1A1AA]">
+                    <p className="mt-3 text-[#94A3B8]">
                         Everything you need to know before downloading.
                     </p>
                 </div>
@@ -92,8 +92,8 @@ export default function FAQ() {
                             className={`
                                 border transition-colors duration-200
                                 ${openIndex === index
-                                    ? "border-white bg-[#18181B]"
-                                    : "border-[#27272A] bg-[#18181B]"
+                                    ? "border-[#4ADE80] bg-[#111D3A]"
+                                    : "border-[rgba(255,255,255,0.06)] bg-[#111D3A]"
                                 }
                             `}
                         >
@@ -104,13 +104,13 @@ export default function FAQ() {
                                 <span className={`text-sm font-medium pr-4 ${
                                     openIndex === index
                                         ? "text-white"
-                                        : "text-[#A1A1AA]"
+                                        : "text-[#94A3B8]"
                                 }`}>
                                     {item.question}
                                 </span>
 
                                 <span className={`
-                                    shrink-0 text-[#A1A1AA] transition-transform duration-200
+                                    shrink-0 text-[#94A3B8] transition-transform duration-200
                                     ${openIndex === index ? "rotate-180" : ""}
                                 `}>
                                     <ChevronIcon />
@@ -125,8 +125,8 @@ export default function FAQ() {
                                 }
                             `}>
                                 <div className="px-5 pb-5">
-                                    <div className="border-t border-[#27272A] pt-4">
-                                        <p className="text-sm text-[#A1A1AA] leading-relaxed">
+                                    <div className="border-t border-[rgba(255,255,255,0.06)] pt-4">
+                                        <p className="text-sm text-[#94A3B8] leading-relaxed">
                                             {item.answer}
                                         </p>
                                     </div>
@@ -137,13 +137,13 @@ export default function FAQ() {
                     ))}
                 </div>
 
-                <div className="mt-10 text-center p-6 bg-[#18181B] border border-[#27272A]">
-                    <p className="text-sm text-[#A1A1AA]">
+                <div className="mt-10 text-center p-6 bg-[#111D3A] border border-[rgba(255,255,255,0.06)]">
+                    <p className="text-sm text-[#94A3B8]">
                         Still have questions?
                     </p>
                     <a
                         href="mailto:linglanboss2@gmail.com"
-                        className="mt-2 inline-block text-sm text-white hover:text-[#A1A1AA] transition-colors font-medium"
+                        className="mt-2 inline-block text-sm text-[#4ADE80] hover:text-white transition-colors font-medium"
                     >
                         linglanboss2@gmail.com →
                     </a>
