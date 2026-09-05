@@ -7,6 +7,7 @@ mod license;
 mod commands;
 
 use tauri::Manager;
+use tauri_plugin_autostart::ManagerExt;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -26,6 +27,20 @@ pub fn run() {
         }))
         .setup(|app| {
             config::init();
+            let cfg = config::get();
+            let autolaunch = app.autolaunch();
+            match autolaunch.is_enabled() {
+                Ok(enabled) => {
+                    if cfg.run_on_startup && !enabled {
+                        let _ = autolaunch.enable();
+                        println!("Autostart enabled (OS registration)");
+                    } else if !cfg.run_on_startup && enabled {
+                        let _ = autolaunch.disable();
+                        println!("Autostart disabled (OS registration)");
+                    }
+                }
+                Err(e) => eprintln!("Could not check autostart status: {}", e),
+            }
 
             std::thread::sleep(std::time::Duration::from_millis(300));
 
