@@ -8,7 +8,7 @@
     }
 
     body {
-        @apply bg-[#09090B] text-white font-sans;
+        @apply bg-[#0A1128] text-white font-sans;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
                      Roboto, Oxygen, Ubuntu, sans-serif;
     }
@@ -22,11 +22,11 @@
     }
 
     ::-webkit-scrollbar-thumb {
-        background: #27272A;
+        background: rgba(255, 255, 255, 0.08);
     }
 
     ::-webkit-scrollbar-thumb:hover {
-        background: #3F3F46;
+        background: rgba(255, 255, 255, 0.15);
     }
 }
 
@@ -34,54 +34,54 @@
     .tab-btn {
         @apply px-3 py-1.5 text-xs font-medium transition-all duration-200;
         background: transparent;
-        color: #A1A1AA;
+        color: #94A3B8;
         border: 1px solid transparent;
     }
 
     .tab-btn.active {
-        background: #18181B;
+        background: #111D3A;
         color: #FFFFFF;
-        border-color: #27272A;
+        border-color: rgba(255, 255, 255, 0.08);
     }
 
     .tab-btn:not(.active):hover {
         color: #FFFFFF;
-        background: #18181B;
+        background: #111D3A;
     }
 
     .soundpack-card {
         @apply flex items-center gap-3 p-3 cursor-pointer transition-all duration-200;
-        background: #18181B;
-        border: 1px solid #27272A;
+        background: #111D3A;
+        border: 1px solid rgba(255, 255, 255, 0.06);
     }
 
     .soundpack-card:hover {
-        background: #27272A;
-        border-color: #3F3F46;
+        background: #1A2A4A;
+        border-color: rgba(255, 255, 255, 0.12);
     }
 
     .soundpack-card.selected {
-        border-color: #FFFFFF;
-        background: #27272A;
+        border-color: #4ADE80;
+        background: #1A2A4A;
     }
 
     .toggle-btn {
         @apply relative w-11 h-6 transition-colors duration-200;
-        background: #27272A;
+        background: rgba(255, 255, 255, 0.1);
     }
 
     .toggle-btn.on {
-        background: #FFFFFF;
+        background: #4ADE80;
     }
 
     .toggle-btn.on .toggle-knob {
         @apply translate-x-5;
-        background: #09090B;
+        background: #0A1128;
     }
 
     .toggle-btn.off .toggle-knob {
         @apply translate-x-0;
-        background: #A1A1AA;
+        background: #94A3B8;
     }
 
     .toggle-knob {
@@ -90,12 +90,12 @@
 
     .volume-track {
         @apply w-full h-1.5 relative cursor-pointer;
-        background: #27272A;
+        background: rgba(255, 255, 255, 0.08);
     }
 
     .volume-fill {
         @apply h-full transition-all duration-100;
-        background: #FFFFFF;
+        background: #4ADE80;
     }
 
     .volume-thumb {
@@ -105,7 +105,7 @@
     }
 
     .volume-thumb:hover {
-        box-shadow: 0 1px 8px rgba(255,255,255,0.2);
+        box-shadow: 0 1px 8px rgba(74, 222, 128, 0.3);
     }
 
     .toast {
@@ -114,65 +114,65 @@
     }
 
     .toast-success {
-        background: #18181B;
-        color: #FFFFFF;
-        border: 1px solid #3F3F46;
+        background: #111D3A;
+        color: #4ADE80;
+        border: 1px solid rgba(74, 222, 128, 0.3);
     }
 
     .toast-error {
-        background: #18181B;
+        background: #111D3A;
         color: #EF4444;
-        border: 1px solid #3F3F46;
+        border: 1px solid rgba(239, 68, 68, 0.3);
     }
 
     .toast-info {
-        background: #18181B;
-        color: #A1A1AA;
-        border: 1px solid #3F3F46;
+        background: #111D3A;
+        color: #94A3B8;
+        border: 1px solid rgba(255, 255, 255, 0.06);
     }
 
     .key-btn {
         @apply flex items-center justify-center border text-xs font-mono cursor-pointer transition-all duration-150;
-        background: #18181B;
-        border-color: #27272A;
-        color: #A1A1AA;
+        background: #111D3A;
+        border-color: rgba(255, 255, 255, 0.08);
+        color: #94A3B8;
     }
 
     .key-btn:hover {
-        background: #27272A;
+        background: #1A2A4A;
         color: #FFFFFF;
-        border-color: #3F3F46;
+        border-color: rgba(255, 255, 255, 0.15);
     }
 
     .key-btn.mapped {
-        background: #27272A;
-        border-color: #FFFFFF;
-        color: #FFFFFF;
+        background: #1A2A4A;
+        border-color: #4ADE80;
+        color: #4ADE80;
     }
 
     .key-btn.selected {
-        background: #FFFFFF;
-        border-color: #FFFFFF;
-        color: #09090B;
-        outline: 1px solid #FFFFFF;
+        background: #4ADE80;
+        border-color: #4ADE80;
+        color: #0A1128;
+        outline: 1px solid #4ADE80;
     }
 
     .dropzone-active {
-        border-color: #FFFFFF !important;
-        background: rgba(255,255,255,0.05) !important;
+        border-color: #4ADE80 !important;
+        background: rgba(74, 222, 128, 0.05) !important;
     }
 
     .sound-file-item {
         @apply flex items-center justify-between px-3 py-2 text-sm;
-        background: #18181B;
-        color: #A1A1AA;
-        border: 1px solid #27272A;
+        background: #111D3A;
+        color: #94A3B8;
+        border: 1px solid rgba(255, 255, 255, 0.06);
     }
 
     .mapping-item {
         @apply flex items-center justify-between px-3 py-2;
-        background: #18181B;
-        border: 1px solid #27272A;
+        background: #111D3A;
+        border: 1px solid rgba(255, 255, 255, 0.06);
     }
 }
 
