@@ -85,7 +85,7 @@ impl AudioEngine {
     ) -> Result<Vec<u8>, String> {
         let mut attempts = 0;
         let max_attempts = 5;
-        let base_delay = Duration::from_millis(200);
+        let base_delay = Duration::from_millis(300);
 
         loop {
             let result = self.load_bundled_sound_or_fallback(pack_name, filename, category);
