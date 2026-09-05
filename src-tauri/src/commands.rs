@@ -95,8 +95,16 @@ pub fn play_key(key_name: String) -> Result<(), String> {
     if cfg.is_turned_off {
         return Ok(());
     }
-    let category = soundpack::get_key_category(&key_name);
-    audio::play(&key_name, category);
+
+    let normalized = match key_name.as_str() {
+        "Enter" => "Return".to_string(),
+        "AltLeft" => "Alt".to_string(),
+        "AltRight" => "AltGr".to_string(),
+        _ => key_name,
+    };
+
+    let category = soundpack::get_key_category(&normalized);
+    audio::play(&normalized, category);
     Ok(())
 }
 
