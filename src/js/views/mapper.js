@@ -1,5 +1,12 @@
 const Mapper = (() => {
 
+    function getDisplayKeyName(keyId) {
+        const displayMap = {
+            "Return": "Enter",
+        };
+        return displayMap[keyId] || keyId;
+    }
+
     function init() {
         updateLockOverlay();
         Dropzone.init();
@@ -98,10 +105,12 @@ const Mapper = (() => {
         panel.id = "assign-panel";
         panel.className = "mt-2 bg-[#18181B] border border-[#27272A] p-3";
 
+        const displayName = getDisplayKeyName(keyId);
+
         let html = `
             <div class="flex items-center justify-between mb-2">
                 <p class="text-xs font-medium text-[#A1A1AA]">
-                    Assign sound to: <span class="text-white font-bold">${escapeText(keyId)}</span>
+                    Assign sound to: <span class="text-white font-bold">${escapeText(displayName)}</span>
                 </p>
                 <button id="btn-close-assign" class="text-[#A1A1AA] hover:text-white text-sm">✕</button>
             </div>
@@ -201,7 +210,8 @@ const Mapper = (() => {
             mappings[keyId] = filename;
             AppState.set("custom_mappings", mappings);
 
-            showToast(`Mapped ${keyId} → ${filename}`, "success");
+            const displayName = getDisplayKeyName(keyId);
+            showToast(`Mapped ${displayName} → ${filename}`, "success");
 
             KeyboardVisual.clearSelection();
             hideAssignPanel();
@@ -221,7 +231,7 @@ const Mapper = (() => {
             delete mappings[keyId];
             AppState.set("custom_mappings", mappings);
 
-            showToast(`Removed mapping for ${keyId}`, "info");
+            showToast(`Removed mapping for ${getDisplayKeyName(keyId)}`, "info");
 
             KeyboardVisual.clearSelection();
             hideAssignPanel();
@@ -287,6 +297,7 @@ const Mapper = (() => {
         for (const keyName of keys) {
             const fileName = mappings[keyName];
             const fileExists = files.includes(fileName);
+            const displayName = getDisplayKeyName(keyName);
 
             const item = document.createElement("div");
             item.className = "mapping-item";
@@ -294,7 +305,7 @@ const Mapper = (() => {
             item.innerHTML = `
                 <div class="flex items-center gap-2 min-w-0">
                     <span class="text-xs font-mono text-white font-bold bg-[#09090B] px-1.5 py-0.5 border border-[#27272A]">
-                        ${escapeText(keyName)}
+                        ${escapeText(displayName)}
                     </span>
                     <span class="text-xs text-[#A1A1AA]">→</span>
                     <span class="text-xs text-white truncate">
