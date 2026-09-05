@@ -30,7 +30,7 @@ impl Default for AppConfig {
             volume: 0.8,
             muted: false,
             run_on_startup: true,
-            is_pro: false,
+            is_pro: true,
             license_key: None,
             instance_id: uuid::Uuid::new_v4().to_string(),
             custom_mappings: HashMap::new(),
