@@ -6,7 +6,7 @@ const AppState = (() => {
         muted: false,
         run_on_startup: false,
         minimize_to_tray: true,
-        is_pro: false,
+        is_pro: true,
         license_key: null,
         custom_mappings: {},
         current_tab: "dashboard",
