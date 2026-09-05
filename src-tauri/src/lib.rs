@@ -53,8 +53,6 @@ pub fn run() {
             if std::env::args().any(|arg| arg == "--minimized") {
                 window.hide().unwrap();
             }
-
-            window.open_devtools();
             
             let cfg = config::get();
             if cfg.is_turned_off {
