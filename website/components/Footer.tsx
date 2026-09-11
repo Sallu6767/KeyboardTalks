@@ -1,0 +1,76 @@
+const LINKS = {
+    github: "https://github.com/Sallu6767/KeyboardTalks",
+    privacy: "/privacy",
+    terms: "/terms",
+    support: "mailto:linglanboss2@gmail.com",
+};
+
+export default function Footer() {
+    const currentYear = new Date().getFullYear();
+
+    return (
+        <footer className="border-t border-[rgba(255,255,255,0.06)] py-10 px-4">
+            <div className="max-w-4xl mx-auto">
+
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-8">
+                    <div className="flex items-center gap-2">
+                        <span className="text-xl">⌨️</span>
+                        <span className="text-sm font-bold text-white">
+                            KeyboardTalks
+                        </span>
+                    </div>
+
+                    <nav className="flex flex-wrap items-center justify-center gap-6">
+                        <a
+                            href={LINKS.github}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm text-[#94A3B8] hover:text-white transition-colors"
+                        >
+                            GitHub
+                        </a>
+                        <a
+                            href={LINKS.privacy}
+                            className="text-sm text-[#94A3B8] hover:text-white transition-colors"
+                        >
+                            Privacy Policy
+                        </a>
+                        <a
+                            href={LINKS.terms}
+                            className="text-sm text-[#94A3B8] hover:text-white transition-colors"
+                        >
+                            Terms of Service
+                        </a>
+                        <a
+                            href={LINKS.support}
+                            className="text-sm text-[#94A3B8] hover:text-white transition-colors"
+                        >
+                            Support
+                        </a>
+                    </nav>
+                </div>
+
+                <div className="border-t border-[rgba(255,255,255,0.06)] mb-8" />
+
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#94A3B8]">
+                    <p>
+                        © {currentYear} KeyboardTalks. All rights reserved.
+                    </p>
+
+                    <p className="flex items-center gap-1">
+                        Payments processed by
+                        <a
+                            href="https://freemius.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[#94A3B8] hover:text-white transition-colors underline"
+                        >
+                            Freemius
+                        </a>
+                    </p>
+                </div>
+
+            </div>
+        </footer>
+    );
+}
