@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>KeyboardTalks</title>
+        <link rel="stylesheet" href="styles/output.css" />
+    </head>
+
+    <body class="bg-[#0A1128] text-white select-none overflow-hidden">
+
+        <div id="app" class="w-full h-screen flex flex-col">
+
+            <header class="flex items-center justify-between px-4 py-3 border-b border-[rgba(255,255,255,0.06)]">
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">⌨️</span>
+                    <span class="text-sm font-bold tracking-wide text-white">
+                        KeyboardTalks
+                    </span>
+                </div>
+                <nav class="flex gap-1">
+                    <button
+                        id="tab-dashboard"
+                        data-tab="dashboard"
+                        class="tab-btn active"
+                    >
+                        🎵 Sounds
+                    </button>
+                    <button
+                        id="tab-mapper"
+                        data-tab="mapper"
+                        class="tab-btn"
+                    >
+                        🎹 Mapper
+                    </button>
+                    <button
+                        id="tab-settings"
+                        data-tab="settings"
+                        class="tab-btn"
+                    >
+                        ⚙️ Settings
+                    </button>
+                </nav>
+            </header>
+
+            <section id="screen-dashboard" class="screen flex-1 overflow-y-auto p-4 space-y-4">
+
+                <div id="autostart-notice" class="border border-[#4ADE80] bg-[#111D3A] p-4 hidden">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-sm font-bold text-white">🔔 KeyboardTalks won't start automatically after PC restart</p>
+                            <p class="text-xs text-[#94A3B8] mt-1">Please just open the app manually once after each boot to automatically enable sounds.</p>
+                        </div>
+                        <button id="btn-dismiss-autostart-notice" class="px-3 py-1 bg-[#4ADE80] text-[#0A1128] text-xs font-medium hover:bg-[#22C55E] transition-colors whitespace-nowrap ml-4">
+                            Got it
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between p-3 border border-[rgba(255,255,255,0.06)] bg-[#111D3A]">
+                    <div>
+                        <p class="text-sm font-medium text-white">Turn Off</p>
+                        <p class="text-xs text-[#94A3B8]">Completely pause keyboard listener</p>
+                    </div>
+                    <button id="btn-turn-off" class="toggle-btn off">
+                        <span class="toggle-knob"></span>
+                    </button>
+                </div>
+
+                <div>
+                    <h2 class="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider mb-3">
+                        Sound Pack
+                    </h2>
+                    <div id="soundpack-list" class="space-y-2">
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider mb-3">
+                        Volume
+                    </h2>
+                    <div class="flex items-center gap-3 p-3 border border-[rgba(255,255,255,0.06)] bg-[#111D3A]">
+                        <button
+                            id="btn-mute"
+                            class="text-lg hover:scale-110 transition-transform"
+                            title="Toggle Mute"
+                        >
+                            🔊
+                        </button>
+                        <div id="volume-slider-container" class="flex-1"></div>
+                        <span id="volume-label" class="text-xs text-[#94A3B8] w-8 text-right">
+                            80%
+                        </span>
+                    </div>
+                </div>
+
+                <div id="pro-banner" class="border border-[rgba(255,255,255,0.06)] bg-[#111D3A] p-4 space-y-3">
+
+                    <div>
+                        <p class="text-sm font-bold text-white">✨ Upgrade to Pro</p>
+                        <p class="text-xs text-[#94A3B8] mt-0.5">
+                            Custom sounds &amp; per-key mapping
+                        </p>
+                    </div>
+
+                    <button
+                        id="btn-buy-pro-banner"
+                        class="w-full py-2 bg-[#4ADE80] hover:bg-[#22C55E] text-[#0A1128] text-sm font-bold transition-colors"
+                    >
+                        🛒 Buy Pro — $5.99
+                    </button>
+                    <p class="text-xs text-[#94A3B8] text-center">
+                        Opens in browser · Key sent to your email
+                    </p>
+
+                    <div class="border-t border-[rgba(255,255,255,0.06)]"></div>
+
+                    <button
+                        id="btn-show-activate"
+                        class="w-full text-xs text-[#94A3B8] hover:text-white transition-colors text-center"
+                    >
+                        Already have a key? Activate here ▸
+                    </button>
+
+                    <div id="banner-activate-panel" class="hidden space-y-2">
+                        <div class="flex gap-2">
+                            <input
+                                id="banner-license-input"
+                                type="text"
+                                placeholder="Paste license key from email"
+                                class="flex-1 bg-[#0A1128] border border-[rgba(255,255,255,0.08)] px-3 py-2 text-xs text-white placeholder:text-[#94A3B8] focus:border-[#4ADE80] focus:outline-none transition-colors"
+                            />
+                            <button
+                                id="banner-btn-activate"
+                                class="px-3 py-2 bg-[#4ADE80] text-[#0A1128] text-xs font-medium hover:bg-[#22C55E] transition-colors whitespace-nowrap"
+                            >
+                                Activate
+                            </button>
+                        </div>
+                        <p id="banner-license-message" class="text-xs hidden"></p>
+                    </div>
+
+                </div>
+            </section>
+
+            <section id="screen-mapper" class="screen flex-1 overflow-y-auto p-4 space-y-4 hidden relative">
+
+                <div id="mapper-lock"
+                    class="absolute inset-0 z-10 bg-[#0A1128]/90 flex flex-col items-center justify-center">
+                    <span class="text-4xl mb-3">🔒</span>
+                    <p class="text-lg font-bold text-white">Pro Feature</p>
+                    <p class="text-sm text-[#94A3B8] mt-1 text-center px-8">
+                        Import custom sounds and assign them to individual keys
+                    </p>
+
+                    <button
+                        id="btn-buy-pro-mapper"
+                        class="mt-4 w-56 py-2.5 bg-[#4ADE80] text-[#0A1128] text-sm font-bold hover:bg-[#22C55E] transition-colors"
+                    >
+                        🛒 Buy Pro — $5.99
+                    </button>
+                    <p class="text-xs text-[#94A3B8] mt-1">
+                        Opens in browser · Key sent to your email
+                    </p>
+
+                    <p class="text-xs text-[#94A3B8] mt-3">
+                        Already purchased?
+                        <button
+                            id="btn-mapper-go-settings"
+                            class="text-[#4ADE80] hover:text-white underline"
+                        >
+                            Activate in Settings
+                        </button>
+                    </p>
+                </div>
+
+                <div>
+                    <h2 class="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider mb-3">
+                        Import Sounds
+                    </h2>
+                    <div id="dropzone"
+                        class="border-2 border-dashed border-[rgba(255,255,255,0.08)] p-6 text-center cursor-pointer hover:border-[#4ADE80] hover:bg-[#111D3A] transition-all duration-200">
+                        <span class="text-2xl">📁</span>
+                        <p class="text-sm text-[#94A3B8] mt-2">
+                            Drop .wav or .mp3 files here
+                        </p>
+                        <p class="text-xs text-[#94A3B8] mt-1">
+                            Max 2 seconds, under 2MB
+                        </p>
+                        <input
+                            id="file-input"
+                            type="file"
+                            accept=".wav,.mp3"
+                            multiple
+                            class="hidden"
+                        />
+                    </div>
+
+                    <div class="mt-3 p-3 bg-[#111D3A] border border-[rgba(255,255,255,0.06)] text-xs text-[#94A3B8] leading-relaxed">
+                        <span class="text-white">💡 Tip:</span> Need sound ideas? Download free meme, gaming &amp; viral sound clips from
+                        <a id="link-myinstants" href="#" class="text-[#4ADE80] hover:text-white underline font-semibold transition-colors">MyInstants</a>.
+                        <span class="block mt-1 text-[10px] text-[#94A3B8]">
+                            * We are in no way affiliated with myinstants.com
+                        </span>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider mb-3">
+                        Your Sounds
+                    </h2>
+                    <div id="custom-sounds-list" class="space-y-1">
+                        <p class="text-xs text-[#94A3B8] italic">No custom sounds imported yet</p>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider mb-3">
+                        Key Mapping
+                    </h2>
+                    <div id="keyboard-visual" class="bg-[#111D3A] border border-[rgba(255,255,255,0.06)] p-3"></div>
+                </div>
+
+                <div>
+                    <h2 class="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider mb-3">
+                        Active Mappings
+                    </h2>
+                    <div id="mappings-list" class="space-y-1">
+                        <p class="text-xs text-[#94A3B8] italic">No keys mapped yet</p>
+                    </div>
+                    <button id="btn-clear-mappings" class="mt-3 w-full py-2 border border-[rgba(255,255,255,0.06)] bg-[#111D3A] text-[#94A3B8] hover:bg-[#1A2A4A] hover:text-white transition-colors text-sm font-medium">
+                        🗑️ Clear All Mappings
+                    </button>
+                </div>
+            </section>
+
+            <section id="screen-settings" class="screen flex-1 overflow-y-auto p-4 space-y-4 hidden">
+
+                <div class="flex items-center justify-between p-3 border border-[rgba(255,255,255,0.06)] bg-[#111D3A]">
+                    <div>
+                        <p class="text-sm font-medium text-white">Turn Off</p>
+                        <p class="text-xs text-[#94A3B8]">Completely pause keyboard listener</p>
+                    </div>
+                    <button id="btn-turn-off-settings" class="toggle-btn off">
+                        <span class="toggle-knob"></span>
+                    </button>
+                </div>
+
+                <div>
+                    <h2 class="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider mb-3">
+                        Pro License
+                    </h2>
+
+                    <div class="bg-[#111D3A] border border-[rgba(255,255,255,0.06)] p-4 space-y-3">
+
+                        <div id="pro-status" class="flex items-center gap-2">
+                            <span id="pro-status-dot" class="w-2 h-2 bg-[#94A3B8]"></span>
+                            <span id="pro-status-text" class="text-sm text-[#94A3B8]">Free Plan</span>
+                        </div>
+
+                        <div class="border-t border-[rgba(255,255,255,0.06)]"></div>
+
+                        <div>
+                            <p class="text-xs font-semibold text-white mb-1">
+                                Already purchased Pro?
+                            </p>
+                            <p class="text-xs text-[#94A3B8] mb-2">
+                                Paste the license key from your email below
+                                to activate on this device.
+                            </p>
+                            <div class="flex gap-2">
+                                <input
+                                    id="license-input"
+                                    type="text"
+                                    placeholder="Paste license key from email"
+                                    class="flex-1 bg-[#0A1128] border border-[rgba(255,255,255,0.08)] px-3 py-2 text-sm text-white placeholder:text-[#94A3B8] focus:border-[#4ADE80] focus:outline-none transition-colors"
+                                />
+                                <button
+                                    id="btn-validate"
+                                    class="px-4 py-2 bg-[#4ADE80] text-[#0A1128] text-sm font-medium hover:bg-[#22C55E] transition-colors whitespace-nowrap"
+                                >
+                                    Activate
+                                </button>
+                            </div>
+                            <p id="license-message" class="text-xs mt-2 hidden"></p>
+                        </div>
+
+                        <div class="border-t border-[rgba(255,255,255,0.06)]"></div>
+
+                        <div>
+                            <p class="text-xs font-semibold text-white mb-1">
+                                Don't have Pro yet?
+                            </p>
+                            <a id="btn-buy-pro"
+                            href="#"
+                            class="flex items-center justify-center gap-2 w-full py-2 bg-[#4ADE80] text-[#0A1128] text-sm font-bold hover:bg-[#22C55E] transition-colors"
+                            >
+                                🛒 Buy Pro Pass — $5.99
+                            </a>
+                            <p class="text-xs text-[#94A3B8] text-center mt-1">
+                                Opens in browser · Works on phone too
+                            </p>
+                        </div>
+
+                        <div class="border-t border-[rgba(255,255,255,0.06)]"></div>
+
+                        <div id="how-it-works-section">
+                            <p class="text-xs font-semibold text-[#94A3B8] mb-2">
+                                How activation works
+                            </p>
+                            <div class="space-y-1">
+                                <div class="flex items-start gap-2">
+                                    <span class="text-xs text-white font-bold w-4 shrink-0">1</span>
+                                    <p class="text-xs text-[#94A3B8]">
+                                        Buy Pro Pass in your browser
+                                        (works on phone or PC)
+                                    </p>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-xs text-white font-bold w-4 shrink-0">2</span>
+                                    <p class="text-xs text-[#94A3B8]">
+                                        Check your email for the license key
+                                    </p>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-xs text-white font-bold w-4 shrink-0">3</span>
+                                    <p class="text-xs text-[#94A3B8]">
+                                        Paste the key above and click Activate
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider mb-3">
+                        About
+                    </h2>
+                    <div class="bg-[#111D3A] border border-[rgba(255,255,255,0.06)] p-4 space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-sm text-[#94A3B8]">Version</span>
+                            <span class="text-sm text-white">0.1.0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-[#94A3B8]">Engine</span>
+                            <span class="text-sm text-white">Tauri v2 + Rust</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-[#94A3B8]">Audio Latency</span>
+                            <span class="text-sm text-white">~3-8ms</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-xs font-semibold text-[#94A3B8] uppercase tracking-wider mb-3">
+                        Links
+                    </h2>
+                    <div class="bg-[#111D3A] border border-[rgba(255,255,255,0.06)] divide-y divide-[rgba(255,255,255,0.06)]">
+                        <a id="link-website" href="#"
+                        class="flex items-center justify-between p-3 hover:bg-[#1A2A4A] transition-colors">
+                            <span class="text-sm text-white">🌐 Website</span>
+                            <span class="text-xs text-[#94A3B8]">→</span>
+                        </a>
+                        <a id="link-github" href="#"
+                        class="flex items-center justify-between p-3 hover:bg-[#1A2A4A] transition-colors">
+                            <span class="text-sm text-white">💻 GitHub</span>
+                            <span class="text-xs text-[#94A3B8]">→</span>
+                        </a>
+                        <a id="link-privacy" href="#"
+                        class="flex items-center justify-between p-3 hover:bg-[#1A2A4A] transition-colors">
+                            <span class="text-sm text-white">🔒 Privacy Policy</span>
+                            <span class="text-xs text-[#94A3B8]">→</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <div id="toast-container"
+                class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none">
+            </div>
+
+        </div>
+
+        <script src="js/utils/tauri-bridge.js"></script>
+        <script src="js/utils/state.js"></script>
+        <script src="js/components/toast.js"></script>
+        <script src="js/components/volume-slider.js"></script>
+        <script src="js/components/dropzone.js"></script>
+        <script src="js/components/keyboard-visual.js"></script>
+        <script src="js/views/dashboard.js"></script>
+        <script src="js/views/mapper.js"></script>
+        <script src="js/views/settings.js"></script>
+        <script src="js/app.js"></script>
+
+    </body>
+</html>
